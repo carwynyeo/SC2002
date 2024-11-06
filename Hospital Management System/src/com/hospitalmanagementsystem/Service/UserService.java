@@ -104,20 +104,19 @@ public class UserService {
         }
     }
 
-    public Optional<User> loginUser(int choice, Scanner scanner, List<Patient> patients, List<Doctor> doctors,
-                                    List<Pharmacist> pharmacists, List<Administrator> admins) {
+    public Optional<User> loginUser(int choice, Scanner scanner) {
         switch (choice) {
             case 2 -> {
-                return patientController.loginPatient(scanner, patients);
+                return patientController.loginPatient(scanner);
             }
             case 3 -> {
-                return doctorController.loginDoctor(scanner, doctors, patients);
+                return doctorController.loginDoctor(scanner);
             }
             case 4 -> {
-                return pharmacistController.loginPharmacist(scanner, pharmacists);
+                return pharmacistController.loginPharmacist(scanner);
             }
             case 5 -> {
-                return adminController.loginAdministrator(scanner, admins);
+                return adminController.loginAdministrator(scanner);
             }
             default -> {
                 System.out.println("Invalid login choice.");

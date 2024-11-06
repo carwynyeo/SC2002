@@ -5,7 +5,6 @@ import java.util.TimerTask;
 
 public class Scheduler {
 
-    // Schedule reminders for appointments
     public void scheduleAppointmentReminders(long delay) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -16,7 +15,6 @@ public class Scheduler {
         }, delay);
     }
 
-    // Schedule inventory checks
     public void scheduleInventoryCheck(long delay) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -27,4 +25,5 @@ public class Scheduler {
         }, delay);
     }
 }
+
 

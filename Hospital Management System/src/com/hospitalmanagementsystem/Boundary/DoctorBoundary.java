@@ -4,6 +4,7 @@ import com.hospitalmanagementsystem.Model.Appointment;
 import com.hospitalmanagementsystem.Model.Patient;
 import com.hospitalmanagementsystem.Model.Doctor;
 import com.hospitalmanagementsystem.Controller.DoctorController;
+import com.hospitalmanagementsystem.Scheduling.TimeSlot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,33 +45,22 @@ public class DoctorBoundary extends UserBoundary {
                     doctorController.updatePatientMedicalRecord(patients, scanner);
                     break;
                 case 3:
-                    doctorController.viewPersonalSchedule();
+                    doctorController.viewPersonalSchedule((Doctor) currentUser);
                     break;
                 case 4:
-                    System.out.print("Enter availability date and time: ");
-                    String dateTime = scanner.nextLine();
-                    doctorController.setAvailability(dateTime);
+                    System.out.print("Enter date for availability: ");
+                    String date = scanner.nextLine();
+                    TimeSlot slot = new TimeSlot(date, "09:00", "17:00");
+                    doctorController.setAvailability((Doctor) currentUser, slot);
                     break;
                 case 5:
-                    doctorController.viewPersonalSchedule();
-                    System.out.println("Enter Appointment ID to accept/decline: ");
+                    System.out.print("Enter Appointment ID to manage: ");
                     String appointmentId = scanner.nextLine();
-                    Appointment selectedAppointment = null;
-                    for (Appointment appointment : appointments) {
-                        if (appointment.getAppointmentID().equals(appointmentId)) {
-                            selectedAppointment = appointment;
-                            break;
-                        }
-                    }
-                    if (selectedAppointment != null) {
+                    Appointment appointment = findAppointmentById(appointmentId); // Assume helper method
+                    if (appointment != null) {
                         System.out.println("1. Accept Appointment\n2. Decline Appointment");
                         int decision = scanner.nextInt();
-                        scanner.nextLine(); // consume newline
-                        if (decision == 1) {
-                            doctorController.acceptAppointment(selectedAppointment);
-                        } else {
-                            doctorController.declineAppointment(selectedAppointment);
-                        }
+                        doctorController.manageAppointmentRequest((Doctor) currentUser, appointment, decision == 1);
                     } else {
                         System.out.println("Appointment not found.");
                     }
@@ -79,17 +69,13 @@ public class DoctorBoundary extends UserBoundary {
                     doctorController.viewPersonalSchedule();
                     break;
                 case 7:
-                    System.out.println("Enter Appointment ID to record outcome: ");
+                    System.out.print("Enter Appointment ID to record outcome: ");
                     appointmentId = scanner.nextLine();
-                    selectedAppointment = null;
-                    for (Appointment appointment : appointments) {
-                        if (appointment.getAppointmentID().equals(appointmentId)) {
-                            selectedAppointment = appointment;
-                            break;
-                        }
-                    }
-                    if (selectedAppointment != null) {
-                        doctorController.recordAppointmentOutcome(selectedAppointment, scanner);
+                    appointment = findAppointmentById(appointmentId); // Assume helper method
+                    if (appointment != null) {
+                        System.out.print("Enter outcome: ");
+                        String outcome = scanner.nextLine();
+                        doctorController.recordAppointmentOutcome((Doctor) currentUser, appointment, outcome);
                     } else {
                         System.out.println("Appointment not found.");
                     }

@@ -18,20 +18,18 @@ public class PatientController {
         this.patientRepository = patientRepository;
     }
 
-    public Optional<User> loginPatient(Scanner scanner, List<Patient> patients) {
+    public Optional<User> loginPatient(Scanner scanner) {
         System.out.print("Enter Patient ID: ");
         String patientId = scanner.nextLine();
         System.out.print("Enter Password: ");
         String patientPassword = scanner.nextLine();
 
-        for (Patient patient : patients) {
-            if (patient.getId().equals(patientId) && patient.getPassword().equals(patientPassword)) {
-                return Optional.of(patient); // Return the patient if login is successful
-            }
+        Patient patient = patientRepository.findPatientById(patientId);
+        if (patient != null && patient.getPassword().equals(patientPassword)) {
+            return Optional.of(patient);
         }
-        return Optional.empty(); // Return empty if login failed
+        return Optional.empty();
     }
-
 
     public void viewMedicalRecord() {
         System.out.println(medicalRecord.getRecordDetails()); // Access via getter method

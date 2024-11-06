@@ -1,5 +1,7 @@
 package com.hospitalmanagementsystem.Scheduling;
+
 import java.util.List;
+import com.hospitalmanagementsystem.Model.Appointment;
 
 public class AppointmentConflictChecker {
 
