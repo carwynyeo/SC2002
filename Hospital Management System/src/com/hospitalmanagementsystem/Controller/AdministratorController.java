@@ -17,18 +17,17 @@ public class AdministratorController {
         this.adminRepository = adminRepository;
     }
 
-    public Optional<User> loginAdministrator(Scanner scanner, List<Administrator> admins) {
+    public Optional<User> loginAdministrator(Scanner scanner) {
         System.out.print("Enter Administrator ID: ");
         String adminId = scanner.nextLine();
         System.out.print("Enter Password: ");
         String adminPassword = scanner.nextLine();
 
-        for (Administrator admin : admins) {
-            if (admin.getId().equals(adminId) && admin.getPassword().equals(adminPassword)) {
-                return Optional.of(admin); // Return the administrator if login is successful
-            }
+        Administrator admin = adminRepository.findAdministratorById(adminId);
+        if (admin != null && admin.getPassword().equals(adminPassword)) {
+            return Optional.of(admin);
         }
-        return Optional.empty(); // Return empty if login failed
+        return Optional.empty();
     }
 
     public void viewStaff() {

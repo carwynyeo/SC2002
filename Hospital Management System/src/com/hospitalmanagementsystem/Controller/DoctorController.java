@@ -5,6 +5,10 @@ import com.hospitalmanagementsystem.Model.Appointment;
 import com.hospitalmanagementsystem.Model.Patient;
 import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.DoctorRepository;
+import com.hospitalmanagementsystem.Scheduling.AppointmentConflictChecker;
+import com.hospitalmanagementsystem.Scheduling.TimeSlot;
+import com.hospitalmanagementsystem.Utility.Logger;
+import com.hospitalmanagementsystem.Scheduling.Schedule;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,25 +16,25 @@ import java.util.Scanner;
 
 public class DoctorController {
     private DoctorRepository doctorRepository;
+    private final AppointmentConflictChecker conflictChecker = new AppointmentConflictChecker();
+    private final Logger logger = new Logger();
 
     public DoctorController(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
     }
 
-    public Optional<User> loginDoctor(Scanner scanner, List<Doctor> doctors, List<Patient> patients) {
+    public Optional<User> loginDoctor(Scanner scanner) {
         System.out.print("Enter Doctor ID: ");
         String doctorId = scanner.nextLine();
         System.out.print("Enter Password: ");
         String doctorPassword = scanner.nextLine();
 
-        for (Doctor doctor : doctors) {
-            if (doctor.getId().equals(doctorId) && doctor.getPassword().equals(doctorPassword)) {
-                return Optional.of(doctor); // Return the doctor if login is successful
-            }
+        Doctor doctor = doctorRepository.findDoctorById(doctorId);
+        if (doctor != null && doctor.getPassword().equals(doctorPassword)) {
+            return Optional.of(doctor);
         }
-        return Optional.empty(); // Return empty if login failed
+        return Optional.empty();
     }
-
 
 
     public void viewPatientMedicalRecord(List<Patient> patients, Scanner scanner) {
@@ -84,44 +88,35 @@ public class DoctorController {
         }
     }
 
-    public void setAvailability(String dateTime) {
-        TimeSlot timeSlot = new TimeSlot(schedule.getAvailableSlots().size() + 1, dateTime, "09:00", "17:00", true);
-        schedule.addAvailableSlot(timeSlot);
-        System.out.println("Availability slot added for: " + dateTime);
-        logger.logInfo("Doctor set availability for: " + dateTime);
+    public void setAvailability(Doctor doctor, TimeSlot slot) {
+        doctor.addAvailableSlot(slot);
+        logger.logInfo("Doctor " + doctor.getName() + " set availability for " + slot.getDate());
     }
 
-  public void acceptAppointment(Appointment appointment) {
-        appointment.setStatus("Confirmed");
-        appointments.add(appointment);
-        System.out.println("Appointment accepted: " + appointment);
-        logger.logInfo("Accepted appointment for patient: " + appointment.getPatient().getName());
+
+    public void manageAppointmentRequest(Doctor doctor, Appointment appointment, boolean accept) {
+        if (accept) {
+            doctor.addAppointment(appointment);
+            appointment.setStatus("Confirmed");
+            logger.logInfo("Doctor " + doctor.getName() + " accepted appointment for patient: " + appointment.getPatient().getName());
+        } else {
+            appointment.setStatus("Declined");
+            logger.logInfo("Doctor " + doctor.getName() + " declined appointment for patient: " + appointment.getPatient().getName());
+        }
     }
 
-    public void declineAppointment(Appointment appointment) {
-        appointment.setStatus("Declined");
-        System.out.println("Appointment declined: " + appointment);
-        logger.logInfo("Declined appointment for patient: " + appointment.getPatient().getName());
-    }
-
-    public void recordAppointmentOutcome(Appointment appointment, Scanner scanner) {
-        System.out.print("Enter appointment outcome: ");
-        String outcome = scanner.nextLine();
-        appointment.getOutcomeRecord().recordService("Service provided during the appointment");
-        appointment.getOutcomeRecord().recordPrescription(appointment.getPrescription());
+    public void recordAppointmentOutcome(Doctor doctor, Appointment appointment, String outcome) {
+        doctor.recordOutcome(appointment, outcome);
         appointment.setCompleted(true);
-        System.out.println("Appointment outcome recorded: " + outcome);
         logger.logInfo("Recorded outcome for appointment: " + appointment.getAppointmentID());
     }
 
-    public void viewPersonalSchedule() {
+    public void viewPersonalSchedule(Doctor doctor) {
         System.out.println("Personal Schedule for " + name + ":");
-        if (appointments.isEmpty()) {
+        if (doctor.getAppointments().isEmpty()) {
             System.out.println("No scheduled appointments.");
         } else {
-            for (Appointment appointment : appointments) {
-                System.out.println(appointment);
-            }
+            doctor.getAppointments().forEach(System.out::println);
         }
     }
 
@@ -139,10 +134,22 @@ public class DoctorController {
         return availableSlots;
     }
 
-    public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
+    public void createAppointment(String doctorId, Appointment appointment) {
+        Doctor doctor = doctorRepository.findDoctorById(doctorId);
+        if (doctor != null) {
+            if (!conflictChecker.checkForConflicts(appointment, Appointment.getAllAppointments())) {
+                doctor.getSchedule().addAvailableSlot(new TimeSlot(
+                        appointment.getAppointmentID(),
+                        appointment.getDate(),
+                        appointment.getAppointmentTime().toLocalTime().toString(),
+                        appointment.getAppointmentTime().plusHours(1).toLocalTime().toString()
+                ));
+                System.out.println("Appointment scheduled: " + appointment);
+            } else {
+                System.out.println("Appointment conflict detected.");
+            }
+        }
     }
-
     public void updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
         appointments.remove(oldAppointment);
         appointments.add(newAppointment);
@@ -150,5 +157,9 @@ public class DoctorController {
 
     public void cancelAppointment(Appointment appointment) {
         appointments.remove(appointment);
+    }
+
+    public List<Doctor> getDoctors() {
+        return doctorRepository.getAllDoctors();
     }
 }

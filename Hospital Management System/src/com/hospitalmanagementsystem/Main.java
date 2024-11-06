@@ -71,7 +71,7 @@ public class Main {
     }
 
     private void loginAsPatient(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(2, scanner, patients, doctors, pharmacists, admins);
+        Optional<User> loggedInUser = userService.loginUser(2, scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Patient patient) {
             PatientBoundary patientBoundary = new PatientBoundary(patient.getId(), patient.getName(), patient.getPassword(), "Patient", patientController);
             patientBoundary.showMenu(scanner);
@@ -81,7 +81,7 @@ public class Main {
     }
 
     private void loginAsDoctor(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(3, scanner, patients, doctors, pharmacists, admins);
+        Optional<User> loggedInUser = userService.loginUser(3, scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Doctor doctor) {
             DoctorBoundary doctorBoundary = new DoctorBoundary(doctor.getId(), doctor.getName(), doctor.getPassword(), "Doctor", doctorController);
             doctorBoundary.showMenu(scanner);
@@ -91,7 +91,7 @@ public class Main {
     }
 
     private void loginAsPharmacist(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(4, scanner, patients, doctors, pharmacists, admins);
+        Optional<User> loggedInUser = userService.loginUser(4, scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Pharmacist pharmacist) {
             PharmacistBoundary pharmacistBoundary = new PharmacistBoundary(pharmacist.getId(), pharmacist.getName(), pharmacist.getPassword(), "Pharmacist", pharmacistController);
             pharmacistBoundary.showMenu(scanner);
@@ -101,7 +101,7 @@ public class Main {
     }
 
     private void loginAsAdministrator(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(5, scanner, patients, doctors, pharmacists, admins);
+        Optional<User> loggedInUser = userService.loginUser(5, scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Administrator admin) {
             AdministratorBoundary adminBoundary = new AdministratorBoundary(admin.getId(), admin.getName(), admin.getPassword(), "Administrator", adminController);
             adminBoundary.showMenu(scanner);

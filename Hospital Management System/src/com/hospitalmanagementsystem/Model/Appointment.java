@@ -20,7 +20,7 @@ public class Appointment {
     private Prescription prescription;
     private final AppointmentOutcomeRecord outcomeRecord;
 
-    public Appointment(String appointmentID, Doctor doctor, Patient patient, String date) {
+    public Appointment(String appointmentID, Doctor doctor, Patient patient, String date, LocalDateTime appointmentTime) {
         this.appointmentID = appointmentID;
         this.appointmentTime = appointmentTime;
         this.doctor = doctor;

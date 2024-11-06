@@ -18,19 +18,19 @@ public class PharmacistController {
         this.pharmacistRepository = pharmacistRepository;
     }
 
-    public Optional<User> loginPharmacist(Scanner scanner, List<Pharmacist> pharmacists) {
+    public Optional<User> loginPharmacist(Scanner scanner) {
         System.out.print("Enter Pharmacist ID: ");
         String pharmacistId = scanner.nextLine();
         System.out.print("Enter Password: ");
         String pharmacistPassword = scanner.nextLine();
 
-        for (Pharmacist pharmacist : pharmacists) {
-            if (pharmacist.getId().equals(pharmacistId) && pharmacist.getPassword().equals(pharmacistPassword)) {
-                return Optional.of(pharmacist); // Return the pharmacist if login is successful
-            }
+        Pharmacist pharmacist = pharmacistRepository.findPharmacistById(pharmacistId);
+        if (pharmacist != null && pharmacist.getPassword().equals(pharmacistPassword)) {
+            return Optional.of(pharmacist);
         }
-        return Optional.empty(); // Return empty if login failed
+        return Optional.empty();
     }
+
 
 
 
