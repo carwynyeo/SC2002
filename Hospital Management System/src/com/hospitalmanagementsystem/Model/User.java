@@ -46,6 +46,4 @@ public abstract class User {
     public String getRole() {
         return role;
     }
-
-    public abstract void showMenu(Scanner scanner);
 }

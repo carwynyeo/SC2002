@@ -1,19 +1,23 @@
 package com.hospitalmanagementsystem.Controller;
 
-import com.hospitalmanagementsystem.Boundary.AdministratorBoundary;
 import com.hospitalmanagementsystem.Model.*;
+import com.hospitalmanagementsystem.Utility.Logger;
+import com.hospitalmanagementsystem.Inventory.InventoryManager;
 import com.hospitalmanagementsystem.Repository.AdministratorRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class AdministratorController {
     private final AdministratorRepository adminRepository;
+    private final InventoryManager inventoryManager = new InventoryManager();
+    private final Logger logger = new Logger();
 
     public AdministratorController(AdministratorRepository adminRepository) {
         this.adminRepository = adminRepository;
     }
 
-    public void loginAdministrator(Scanner scanner, List<Administrator> admins) {
+    public Optional<User> loginAdministrator(Scanner scanner, List<Administrator> admins) {
         System.out.print("Enter Administrator ID: ");
         String adminId = scanner.nextLine();
         System.out.print("Enter Password: ");
@@ -21,11 +25,10 @@ public class AdministratorController {
 
         for (Administrator admin : admins) {
             if (admin.getId().equals(adminId) && admin.getPassword().equals(adminPassword)) {
-                admin.showMenu(scanner);
-                return; // Exit the method after successful login
+                return Optional.of(admin); // Return the administrator if login is successful
             }
         }
-        System.out.println("Invalid Administrator ID or Password.");
+        return Optional.empty(); // Return empty if login failed
     }
 
     public void viewStaff() {
@@ -45,14 +48,11 @@ public class AdministratorController {
         int choice = scanner.nextInt();
         scanner.nextLine(); // consume newline
 
-        if (choice == 1) {
-            viewStaff();
-        } else if (choice == 2) {
-            addStaff(scanner);
-        } else if (choice == 3) {
-            removeStaff(scanner);
-        } else {
-            System.out.println("Invalid choice.");
+        switch (choice) {
+            case 1 -> viewStaff();
+            case 2 -> addStaff(scanner);
+            case 3 -> removeStaff(scanner);
+            default -> System.out.println("Invalid choice.");
         }
     }
 
@@ -66,21 +66,21 @@ public class AdministratorController {
         System.out.print("Enter staff password: ");
         String password = scanner.nextLine();
 
-        User newStaff;
-        if (role.equalsIgnoreCase("Doctor")) {
-            newStaff = new Doctor(id, name, password);
-        } else if (role.equalsIgnoreCase("Pharmacist")) {
-            newStaff = new Pharmacist(id, name, password, inventoryManager);
-        } else {
-            System.out.println("Invalid role.");
-            return;
+        User newStaff = switch (role.toLowerCase()) {
+            case "doctor" -> new Doctor(id, name, password);
+            case "pharmacist" -> new Pharmacist(id, name, password, inventoryManager);
+            default -> {
+                System.out.println("Invalid role.");
+                yield null;
+            }
+        };
+
+        if (newStaff != null) {
+            adminRepository.addStaff(newStaff);
+            System.out.println("Staff added: " + name);
+            logger.logInfo("New staff added: " + name);
         }
-
-        adminRepository.addStaff(newStaff);
-        System.out.println("Staff added: " + name);
-        logger.logInfo("New staff added: " + name);
     }
-
     private void removeStaff(Scanner scanner) {
         System.out.print("Enter staff ID to remove: ");
         String staffId = scanner.nextLine();
@@ -92,8 +92,8 @@ public class AdministratorController {
         }
     }
 
-    // View all appointments in the system
-    public void viewAppointments(List<Appointment> appointments) {
+    public void viewAppointments() {
+        List<Appointment> appointments = adminRepository.getAppointments(); // Ensure getAppointments() method exists in the repository.
         if (appointments.isEmpty()) {
             System.out.println("No appointments scheduled.");
         } else {
@@ -109,18 +109,18 @@ public class AdministratorController {
         int choice = scanner.nextInt();
         scanner.nextLine(); // consume newline
 
-        if (choice == 1) {
-            System.out.println(inventoryManager.getInventoryList());
-        } else if (choice == 2) {
-            System.out.print("Enter medication name: ");
-            String medication = scanner.nextLine();
-            System.out.print("Enter stock quantity: ");
-            int quantity = scanner.nextInt();
-            inventoryManager.updateStock(medication, quantity);
-            System.out.println("Inventory updated.");
-            logger.logInfo("Inventory updated for " + medication);
-        } else {
-            System.out.println("Invalid option.");
+        switch (choice) {
+            case 1 -> System.out.println(inventoryManager.getInventoryList());
+            case 2 -> {
+                System.out.print("Enter medication name: ");
+                String medication = scanner.nextLine();
+                System.out.print("Enter stock quantity: ");
+                int quantity = scanner.nextInt();
+                inventoryManager.updateStock(medication, quantity);
+                System.out.println("Inventory updated.");
+                logger.logInfo("Inventory updated for " + medication);
+            }
+            default -> System.out.println("Invalid option.");
         }
     }
 

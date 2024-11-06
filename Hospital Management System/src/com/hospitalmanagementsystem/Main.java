@@ -1,10 +1,12 @@
 package com.hospitalmanagementsystem;
 
+import com.hospitalmanagementsystem.Boundary.*;
 import com.hospitalmanagementsystem.Service.UserService;
 import com.hospitalmanagementsystem.Controller.*;
 import com.hospitalmanagementsystem.Model.*;
 import com.hospitalmanagementsystem.Repository.*;
 
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,7 +27,9 @@ public class Main {
     private final List<Pharmacist> pharmacists = new ArrayList<>();
     private final List<Administrator> admins = new ArrayList<>();
 
-    private final UserService userService = new UserService(patientController, doctorController, adminController, pharmacistController);
+    UserService userService = new UserService(patientController, doctorController, adminController,
+            pharmacistController, patientRepository, doctorRepository, pharmacistRepository, adminRepository
+    );
 
     public static void main(String[] args) {
         new Main().start(); // Create an instance of Main and call the instance method start
@@ -42,7 +46,10 @@ public class Main {
 
             switch (choice) {
                 case 1 -> userService.createUserAccount(scanner, patients, doctors, pharmacists, admins);
-                case 2, 3, 4, 5 -> userService.loginUser(choice, scanner, patients, doctors, pharmacists, admins);
+                case 2 -> loginAsPatient(scanner);
+                case 3 -> loginAsDoctor(scanner);
+                case 4 -> loginAsPharmacist(scanner);
+                case 5 -> loginAsAdministrator(scanner);
                 case 6 -> {
                     System.out.println("Exiting system...");
                     scanner.close();
@@ -61,5 +68,45 @@ public class Main {
         System.out.println("5. Login as Administrator");
         System.out.println("6. Exit");
         System.out.print("Enter choice: ");
+    }
+
+    private void loginAsPatient(Scanner scanner) {
+        Optional<User> loggedInUser = userService.loginUser(2, scanner, patients, doctors, pharmacists, admins);
+        if (loggedInUser.isPresent() && loggedInUser.get() instanceof Patient patient) {
+            PatientBoundary patientBoundary = new PatientBoundary(patient.getId(), patient.getName(), patient.getPassword(), "Patient", patientController);
+            patientBoundary.showMenu(scanner);
+        } else {
+            System.out.println("Invalid Patient credentials.");
+        }
+    }
+
+    private void loginAsDoctor(Scanner scanner) {
+        Optional<User> loggedInUser = userService.loginUser(3, scanner, patients, doctors, pharmacists, admins);
+        if (loggedInUser.isPresent() && loggedInUser.get() instanceof Doctor doctor) {
+            DoctorBoundary doctorBoundary = new DoctorBoundary(doctor.getId(), doctor.getName(), doctor.getPassword(), "Doctor", doctorController);
+            doctorBoundary.showMenu(scanner);
+        } else {
+            System.out.println("Invalid Doctor credentials.");
+        }
+    }
+
+    private void loginAsPharmacist(Scanner scanner) {
+        Optional<User> loggedInUser = userService.loginUser(4, scanner, patients, doctors, pharmacists, admins);
+        if (loggedInUser.isPresent() && loggedInUser.get() instanceof Pharmacist pharmacist) {
+            PharmacistBoundary pharmacistBoundary = new PharmacistBoundary(pharmacist.getId(), pharmacist.getName(), pharmacist.getPassword(), "Pharmacist", pharmacistController);
+            pharmacistBoundary.showMenu(scanner);
+        } else {
+            System.out.println("Invalid Pharmacist credentials.");
+        }
+    }
+
+    private void loginAsAdministrator(Scanner scanner) {
+        Optional<User> loggedInUser = userService.loginUser(5, scanner, patients, doctors, pharmacists, admins);
+        if (loggedInUser.isPresent() && loggedInUser.get() instanceof Administrator admin) {
+            AdministratorBoundary adminBoundary = new AdministratorBoundary(admin.getId(), admin.getName(), admin.getPassword(), "Administrator", adminController);
+            adminBoundary.showMenu(scanner);
+        } else {
+            System.out.println("Invalid Administrator credentials.");
+        }
     }
 }

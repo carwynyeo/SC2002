@@ -1,6 +1,10 @@
 package com.hospitalmanagementsystem.Model;
 
+
+import com.hospitalmanagementsystem.Billing.Billing;
 import com.hospitalmanagementsystem.MedicalRecord.MedicalRecord;
+import com.hospitalmanagementsystem.Billing.Payment;
+
 
 import java.util.ArrayList;
 import java.util.List;

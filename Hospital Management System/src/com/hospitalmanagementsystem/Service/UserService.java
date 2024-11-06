@@ -1,11 +1,17 @@
 package com.hospitalmanagementsystem.Service;
 
 import com.hospitalmanagementsystem.Controller.*;
-import com.hospitalmanagementsystem.Inventory.Inventory;
+import com.hospitalmanagementsystem.Inventory.InventoryManager;
 import com.hospitalmanagementsystem.MedicalRecord.MedicalRecord;
 import com.hospitalmanagementsystem.Model.*;
+import com.hospitalmanagementsystem.Repository.AdministratorRepository;
+import com.hospitalmanagementsystem.Repository.DoctorRepository;
+import com.hospitalmanagementsystem.Repository.PatientRepository;
+import com.hospitalmanagementsystem.Repository.PharmacistRepository;
+
 import java.util.List;
 import java.util.Scanner;
+import java.util.Optional;
 
 public class UserService {
     private final PatientController patientController;
@@ -13,14 +19,24 @@ public class UserService {
     private final AdministratorController adminController;
     private final PharmacistController pharmacistController;
 
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final PharmacistRepository pharmacistRepository;
+    private final AdministratorRepository adminRepository;
+
     public UserService(PatientController patientController, DoctorController doctorController,
-                       AdministratorController adminController, PharmacistController pharmacistController) {
+                       AdministratorController adminController, PharmacistController pharmacistController,
+                       PatientRepository patientRepository, DoctorRepository doctorRepository,
+                       PharmacistRepository pharmacistRepository, AdministratorRepository adminRepository) {
         this.patientController = patientController;
         this.doctorController = doctorController;
         this.adminController = adminController;
         this.pharmacistController = pharmacistController;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+        this.pharmacistRepository = pharmacistRepository;
+        this.adminRepository = adminRepository;
     }
-
     public void createUserAccount(Scanner scanner, List<Patient> patients, List<Doctor> doctors,
                                   List<Pharmacist> pharmacists, List<Administrator> admins) {
         System.out.println("Choose a user role to create:");
@@ -37,33 +53,77 @@ public class UserService {
 
         switch (roleChoice) {
             case 1 -> {
-                patients.add(new Patient(id, name, password, new MedicalRecord(id, name, "O+")));
+                // Check if patient with same ID already exists
+                if (patientRepository.findPatientById(id) != null) {
+                    System.out.println("A Patient with this ID already exists.");
+                    return;
+                }
+                // Create new patient if ID is unique
+                Patient newPatient = new Patient(id, name, password, new MedicalRecord(id, name, "O+"));
+                patients.add(newPatient);
+                patientRepository.addPatient(newPatient); // Add to repository
                 System.out.println("Patient account created successfully!");
             }
             case 2 -> {
-                doctors.add(new Doctor(id, name, password));
+                // Check if doctor with same ID already exists
+                if (doctorRepository.findDoctorById(id) != null) {
+                    System.out.println("A Doctor with this ID already exists.");
+                    return;
+                }
+                // Create new doctor if ID is unique
+                Doctor newDoctor = new Doctor(id, name, password);
+                doctors.add(newDoctor);
+                doctorRepository.addDoctor(newDoctor); // Add to repository
                 System.out.println("Doctor account created successfully!");
             }
             case 3 -> {
-                pharmacists.add(new Pharmacist(id, name, password, new Inventory()));
+                // Check if pharmacist with same ID already exists
+                if (pharmacistRepository.findPharmacistById(id) != null) {
+                    System.out.println("A Pharmacist with this ID already exists.");
+                    return;
+                }
+                // Create new pharmacist if ID is unique
+                Pharmacist newPharmacist = new Pharmacist(id, name, password, new InventoryManager());
+                pharmacists.add(newPharmacist);
+                pharmacistRepository.addPharmacist(newPharmacist); // Add to repository
                 System.out.println("Pharmacist account created successfully!");
             }
             case 4 -> {
-                admins.add(new Administrator(id, name, password));
+                // Check if administrator with same ID already exists
+                if (adminRepository.findAdministratorById(id) != null) {
+                    System.out.println("An Administrator with this ID already exists.");
+                    return;
+                }
+                // Create new administrator if ID is unique
+                Administrator newAdmin = new Administrator(id, name, password);
+                admins.add(newAdmin);
+                adminRepository.addAdministrator(newAdmin); // Add to repository
                 System.out.println("Administrator account created successfully!");
             }
             default -> System.out.println("Invalid choice. Account creation failed.");
         }
     }
 
-    public void loginUser(int choice, Scanner scanner, List<Patient> patients, List<Doctor> doctors,
-                          List<Pharmacist> pharmacists, List<Administrator> admins) {
+    public Optional<User> loginUser(int choice, Scanner scanner, List<Patient> patients, List<Doctor> doctors,
+                                    List<Pharmacist> pharmacists, List<Administrator> admins) {
         switch (choice) {
-            case 2 -> patientController.loginPatient(scanner, patients);
-            case 3 -> doctorController.loginDoctor(scanner, doctors, patients);
-            case 4 -> pharmacistController.loginPharmacist(scanner, pharmacists);
-            case 5 -> adminController.loginAdministrator(scanner, admins);
-            default -> System.out.println("Invalid login choice.");
+            case 2 -> {
+                return patientController.loginPatient(scanner, patients);
+            }
+            case 3 -> {
+                return doctorController.loginDoctor(scanner, doctors, patients);
+            }
+            case 4 -> {
+                return pharmacistController.loginPharmacist(scanner, pharmacists);
+            }
+            case 5 -> {
+                return adminController.loginAdministrator(scanner, admins);
+            }
+            default -> {
+                System.out.println("Invalid login choice.");
+                return Optional.empty();
+            }
         }
     }
+
 }
