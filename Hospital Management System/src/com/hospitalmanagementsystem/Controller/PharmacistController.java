@@ -4,9 +4,11 @@ import com.hospitalmanagementsystem.Inventory.ReplenishmentRequest;
 import com.hospitalmanagementsystem.Model.Appointment;
 import com.hospitalmanagementsystem.Model.Pharmacist;
 import com.hospitalmanagementsystem.MedicalRecord.Prescription;
+import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.PharmacistRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class PharmacistController {
@@ -16,21 +18,20 @@ public class PharmacistController {
         this.pharmacistRepository = pharmacistRepository;
     }
 
-    public void loginPharmacist(Scanner scanner, List<Pharmacist> pharmacists) {
+    public Optional<User> loginPharmacist(Scanner scanner, List<Pharmacist> pharmacists) {
         System.out.print("Enter Pharmacist ID: ");
         String pharmacistId = scanner.nextLine();
         System.out.print("Enter Password: ");
         String pharmacistPassword = scanner.nextLine();
 
         for (Pharmacist pharmacist : pharmacists) {
-            if (pharmacist.id.equals(pharmacistId) && pharmacist.password.equals(pharmacistPassword)) {
-                pharmacist.login(pharmacistPassword);
-                pharmacist.showMenu(scanner); // Display the pharmacist's menu
-                return; // Exit the method after successful login
+            if (pharmacist.getId().equals(pharmacistId) && pharmacist.getPassword().equals(pharmacistPassword)) {
+                return Optional.of(pharmacist); // Return the pharmacist if login is successful
             }
         }
-        System.out.println("Invalid Pharmacist ID or Password.");
+        return Optional.empty(); // Return empty if login failed
     }
+
 
 
     public void viewPrescription(Appointment appointment) {

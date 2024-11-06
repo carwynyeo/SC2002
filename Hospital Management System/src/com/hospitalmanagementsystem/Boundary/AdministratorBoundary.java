@@ -1,24 +1,18 @@
 package com.hospitalmanagementsystem.Boundary;
 
 import com.hospitalmanagementsystem.Controller.AdministratorController;
-import com.hospitalmanagementsystem.Controller.PatientController;
-import com.hospitalmanagementsystem.Model.Doctor;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class AdministratorBoundary extends UserBoundary {
-    private final Scanner scanner = new Scanner(System.in);
     private final AdministratorController administratorController;
 
     public AdministratorBoundary(String id, String name, String password, String role, AdministratorController administratorController) {
-        super(id, name, password, role); // Call the superclass constructor
+        super(id, name, password, role);
         this.administratorController = administratorController;
     }
+
     @Override
     public void showMenu(Scanner scanner) {
-
         while (true) {
             System.out.println("Administrator Menu:");
             System.out.println("1. View and Manage Hospital Staff");
@@ -30,23 +24,15 @@ public class AdministratorBoundary extends UserBoundary {
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
             switch (choice) {
-                case 1:
-                    administratorController.manageStaff(scanner);
-                    break;
-                case 2:
-                    administratorController.viewAppointments(appointments);
-                    break;
-                case 3:
-                    administratorController.manageInventory(scanner);
-                    break;
-                case 4:
-                    administratorController.approveReplenishmentRequest(scanner);
-                    break;
-                case 5:
+                case 1 -> administratorController.manageStaff(scanner);
+                case 2 -> administratorController.viewAppointments();
+                case 3 -> administratorController.manageInventory(scanner);
+                case 4 -> administratorController.approveReplenishmentRequest(scanner);
+                case 5 -> {
                     System.out.println("Logging out...");
                     return;
-                default:
-                    System.out.println("Invalid option.");
+                }
+                default -> System.out.println("Invalid option.");
             }
         }
     }

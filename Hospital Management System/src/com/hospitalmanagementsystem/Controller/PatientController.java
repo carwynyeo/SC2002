@@ -4,9 +4,11 @@ import com.hospitalmanagementsystem.Model.Doctor;
 import com.hospitalmanagementsystem.MedicalRecord.MedicalRecord;
 import com.hospitalmanagementsystem.Model.Patient;
 import com.hospitalmanagementsystem.Model.Appointment;
+import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.PatientRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class PatientController {
@@ -16,21 +18,20 @@ public class PatientController {
         this.patientRepository = patientRepository;
     }
 
-    public void loginPatient(Scanner scanner, List<Patient> patients) {
+    public Optional<User> loginPatient(Scanner scanner, List<Patient> patients) {
         System.out.print("Enter Patient ID: ");
         String patientId = scanner.nextLine();
         System.out.print("Enter Password: ");
         String patientPassword = scanner.nextLine();
 
         for (Patient patient : patients) {
-            if (patient.id.equals(patientId) && patient.password.equals(patientPassword)) {
-                patient.login(patientPassword);
-                patient.showMenu(scanner); // Display the patient's menu
-                return; // Exit the method after successful login
+            if (patient.getId().equals(patientId) && patient.getPassword().equals(patientPassword)) {
+                return Optional.of(patient); // Return the patient if login is successful
             }
         }
-        System.out.println("Invalid Patient ID or Password.");
+        return Optional.empty(); // Return empty if login failed
     }
+
 
     public void viewMedicalRecord() {
         System.out.println(medicalRecord.getRecordDetails()); // Access via getter method

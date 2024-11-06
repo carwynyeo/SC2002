@@ -1,7 +1,10 @@
 package com.hospitalmanagementsystem.Controller;
 
 import com.hospitalmanagementsystem.Inventory.InventoryManager;
+import com.hospitalmanagementsystem.Model.Appointment;
+import com.hospitalmanagementsystem.Scheduling.AppointmentConflictChecker;
 import com.hospitalmanagementsystem.Service.ValidationService;
+import com.hospitalmanagementsystem.Utility.Logger;
 
 import java.util.List;
 import java.util.Scanner;
