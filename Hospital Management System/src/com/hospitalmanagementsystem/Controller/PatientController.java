@@ -1,22 +1,23 @@
 package com.hospitalmanagementsystem.Controller;
 
 import com.hospitalmanagementsystem.Model.Doctor;
-import com.hospitalmanagementsystem.MedicalRecord.MedicalRecord;
 import com.hospitalmanagementsystem.Model.Patient;
 import com.hospitalmanagementsystem.Model.Appointment;
 import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.DoctorRepository;
 import com.hospitalmanagementsystem.Repository.PatientRepository;
+import com.hospitalmanagementsystem.Service.ChangePasswordService;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class PatientController {
+public class PatientController extends UserController {
     private PatientRepository patientRepository;
     private DoctorRepository doctorRepository;
 
-    public PatientController(PatientRepository patientRepository) {
+    public PatientController(ChangePasswordService changePasswordService, PatientRepository patientRepository) {
+        super(changePasswordService);
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
     }

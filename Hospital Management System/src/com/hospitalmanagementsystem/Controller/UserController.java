@@ -1,37 +1,15 @@
 package com.hospitalmanagementsystem.Controller;
 
-import com.hospitalmanagementsystem.Model.Administrator;
 import com.hospitalmanagementsystem.Model.User;
-import com.hospitalmanagementsystem.Repository.UserRepository;
-import com.hospitalmanagementsystem.Service.AuthenticationService;
+import com.hospitalmanagementsystem.Service.ChangePasswordService;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 public class UserController {
-    protected AuthenticationService authenticationService;
-    protected UserRepository userRepository;
+    protected ChangePasswordService changePasswordService;
 
-    // Constructor that accepts AuthenticationService and UserRepository dependencies
-    public UserController(AuthenticationService authenticationService, UserRepository userRepository) {
-        this.authenticationService = authenticationService;
-        this.userRepository = userRepository;
-    }
-
-    // Modified login method to match loginAdministrator style
-    public Optional<User> login(Scanner scanner) {
-        System.out.print("Enter User ID: ");
-        String userId = scanner.nextLine();
-        System.out.print("Enter Password: ");
-        String userPassword = scanner.nextLine();
-
-        // Fetch the user from the repository
-        User user = userRepository.findUserById(userId);
-
-        if (user != null && user.getPassword().equals(userPassword)) {
-            return Optional.of(user);
-        }
-        return Optional.empty();
+    public UserController(ChangePasswordService changePasswordService) {
+        this.changePasswordService = changePasswordService;
     }
 
     public void logout(User currentUser) {
@@ -48,7 +26,8 @@ public class UserController {
         System.out.print("Enter new password: ");
         String newPassword = scanner.nextLine();
 
-        if (authenticationService.changePassword(currentUser, oldPassword, newPassword)) {
+        // Use only oldPassword and newPassword as per the method signature in ChangePasswordService
+        if (changePasswordService.changePassword(oldPassword, newPassword)) {
             System.out.println("Password changed successfully.");
         } else {
             System.out.println("Password change failed. Please check the requirements.");

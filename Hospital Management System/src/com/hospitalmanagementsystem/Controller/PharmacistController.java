@@ -6,15 +6,16 @@ import com.hospitalmanagementsystem.Model.Pharmacist;
 import com.hospitalmanagementsystem.MedicalRecord.Prescription;
 import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.PharmacistRepository;
+import com.hospitalmanagementsystem.Service.ChangePasswordService;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class PharmacistController {
+public class PharmacistController extends UserController {
     private PharmacistRepository pharmacistRepository;
 
-    public PharmacistController(PharmacistRepository pharmacistRepository) {
+    public PharmacistController(ChangePasswordService changePasswordService, PharmacistRepository pharmacistRepository) {
+        super(changePasswordService);
         this.pharmacistRepository = pharmacistRepository;
     }
 
@@ -30,7 +31,6 @@ public class PharmacistController {
         }
         return Optional.empty();
     }
-
 
 
 

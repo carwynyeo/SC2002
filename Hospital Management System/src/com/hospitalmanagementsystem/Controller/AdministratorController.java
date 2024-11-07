@@ -1,6 +1,7 @@
 package com.hospitalmanagementsystem.Controller;
 
 import com.hospitalmanagementsystem.Model.*;
+import com.hospitalmanagementsystem.Service.ChangePasswordService;
 import com.hospitalmanagementsystem.Utility.Logger;
 import com.hospitalmanagementsystem.Inventory.InventoryManager;
 import com.hospitalmanagementsystem.Repository.AdministratorRepository;
@@ -8,12 +9,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class AdministratorController {
+//Methods here should be fixed to retrieve StaffList from a StaffRepository
+//Staff Repository will contain all the Doctors from Doctor Repository, Pharmacists from....
+public class AdministratorController extends UserController{
     private final AdministratorRepository adminRepository;
     private final InventoryManager inventoryManager = new InventoryManager();
     private final Logger logger = new Logger();
 
-    public AdministratorController(AdministratorRepository adminRepository) {
+    public AdministratorController(ChangePasswordService changePasswordService, AdministratorRepository adminRepository) {
+        super(changePasswordService);
         this.adminRepository = adminRepository;
     }
 

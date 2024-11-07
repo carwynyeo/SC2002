@@ -7,19 +7,20 @@ import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.DoctorRepository;
 import com.hospitalmanagementsystem.Scheduling.AppointmentConflictChecker;
 import com.hospitalmanagementsystem.Scheduling.TimeSlot;
+import com.hospitalmanagementsystem.Service.ChangePasswordService;
 import com.hospitalmanagementsystem.Utility.Logger;
-import com.hospitalmanagementsystem.Scheduling.Schedule;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class DoctorController {
+public class DoctorController extends UserController {
     private final DoctorRepository doctorRepository;
     private final AppointmentConflictChecker conflictChecker = new AppointmentConflictChecker();
     private final Logger logger = new Logger();
 
-    public DoctorController(DoctorRepository doctorRepository) {
+    public DoctorController(ChangePasswordService changePasswordService, DoctorRepository doctorRepository) {
+        super(changePasswordService);
         this.doctorRepository = doctorRepository;
     }
 
