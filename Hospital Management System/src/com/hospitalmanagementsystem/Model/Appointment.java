@@ -71,7 +71,6 @@ public class Appointment {
         return isCompleted;
     }
 
-
     @Override
     public String toString() {
         return "Appointment ID: " + appointmentID + ", Doctor: " + doctor.getName() + ", Patient: " + patient.getName() +

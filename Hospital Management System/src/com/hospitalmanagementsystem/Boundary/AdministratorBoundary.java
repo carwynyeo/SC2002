@@ -1,14 +1,18 @@
 package com.hospitalmanagementsystem.Boundary;
 
 import com.hospitalmanagementsystem.Controller.AdministratorController;
+import com.hospitalmanagementsystem.Model.Administrator;
+
 import java.util.Scanner;
 
 public class AdministratorBoundary extends UserBoundary {
     private final AdministratorController administratorController;
+    private final Administrator currentAdministrator;
 
-    public AdministratorBoundary(String id, String name, String password, String role, AdministratorController administratorController) {
-        super(id, name, password, role);
+    public AdministratorBoundary(AdministratorController administratorController, Administrator currentAdministrator) {
+        super(currentAdministrator.getId(), currentAdministrator.getName(), currentAdministrator.getPassword(), currentAdministrator.getRole());
         this.administratorController = administratorController;
+        this.currentAdministrator = currentAdministrator;
     }
 
     @Override

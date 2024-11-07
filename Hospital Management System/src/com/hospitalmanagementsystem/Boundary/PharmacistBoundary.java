@@ -2,19 +2,22 @@ package com.hospitalmanagementsystem.Boundary;
 
 import com.hospitalmanagementsystem.Controller.PharmacistController;
 import com.hospitalmanagementsystem.Model.Appointment;
+import com.hospitalmanagementsystem.Model.Pharmacist;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class PharmacistBoundary extends UserBoundary {
-
     private final PharmacistController pharmacistController;
+    private final Pharmacist currentPharmacist;
 
-    public PharmacistBoundary(String id, String name, String password, String role, PharmacistController pharmacistController) {
-        super(id, name, password, role);// Call to UserBoundary constructor
+    public PharmacistBoundary(PharmacistController pharmacistController, Pharmacist currentPharmacist) {
+        super(currentPharmacist.getId(), currentPharmacist.getName(), currentPharmacist.getPassword(), currentPharmacist.getRole());
         this.pharmacistController = pharmacistController;
+        this.currentPharmacist = currentPharmacist;
     }
+
 
     @Override
     public void showMenu(Scanner scanner) {
