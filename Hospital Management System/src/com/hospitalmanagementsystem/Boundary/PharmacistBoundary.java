@@ -63,6 +63,7 @@ public class PharmacistBoundary extends UserBoundary {
                     break;
                 case 5:
                     System.out.println("Logging out...");
+                    pharmacistController.logout(currentPharmacist);
                     return;
                 default:
                     System.out.println("Invalid option.");

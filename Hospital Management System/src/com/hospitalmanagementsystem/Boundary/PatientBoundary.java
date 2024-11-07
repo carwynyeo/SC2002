@@ -60,6 +60,7 @@ public class PatientBoundary extends UserBoundary {
                     break;
                 case 9:
                     System.out.println("Logging out...");
+                    patientController.logout(currentPatient);
                     return;
                 default:
                     System.out.println("Invalid option.");

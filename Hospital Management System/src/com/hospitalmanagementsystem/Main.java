@@ -1,6 +1,7 @@
 package com.hospitalmanagementsystem;
 
 import com.hospitalmanagementsystem.Boundary.*;
+import com.hospitalmanagementsystem.Service.ChangePasswordService;
 import com.hospitalmanagementsystem.Service.UserService;
 import com.hospitalmanagementsystem.Controller.*;
 import com.hospitalmanagementsystem.Model.*;
@@ -17,10 +18,16 @@ public class Main {
     private final AdministratorRepository adminRepository = new AdministratorRepository();
     private final PharmacistRepository pharmacistRepository = new PharmacistRepository();
 
-    private final PatientController patientController = new PatientController(patientRepository);
-    private final DoctorController doctorController = new DoctorController(doctorRepository);
-    private final AdministratorController adminController = new AdministratorController(adminRepository);
-    private final PharmacistController pharmacistController = new PharmacistController(pharmacistRepository);
+    // Separate ChangePasswordService instances with specific credentials for each role
+    private final ChangePasswordService patientAuthService = new ChangePasswordService("patientPassword");
+    private final ChangePasswordService doctorAuthService = new ChangePasswordService("doctorPassword");
+    private final ChangePasswordService adminAuthService = new ChangePasswordService("adminPassword");
+    private final ChangePasswordService pharmacistAuthService = new ChangePasswordService("pharmacistPassword");
+
+    private final PatientController patientController = new PatientController(patientAuthService, patientRepository);
+    private final DoctorController doctorController = new DoctorController(doctorAuthService, doctorRepository);
+    private final AdministratorController adminController = new AdministratorController(adminAuthService, adminRepository);
+    private final PharmacistController pharmacistController = new PharmacistController(pharmacistAuthService, pharmacistRepository);
 
     private final List<Patient> patients = new ArrayList<>();
     private final List<Doctor> doctors = new ArrayList<>();

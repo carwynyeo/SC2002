@@ -34,6 +34,7 @@ public class AdministratorBoundary extends UserBoundary {
                 case 4 -> administratorController.approveReplenishmentRequest(scanner);
                 case 5 -> {
                     System.out.println("Logging out...");
+                    administratorController.logout(currentAdministrator);
                     return;
                 }
                 default -> System.out.println("Invalid option.");
