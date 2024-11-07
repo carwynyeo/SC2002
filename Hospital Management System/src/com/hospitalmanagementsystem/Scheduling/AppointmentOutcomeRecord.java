@@ -8,14 +8,16 @@ public class AppointmentOutcomeRecord {
     private String date;
     private String servicesProvided;
     private String prescriptions;
+    private String consultationNotes;
 
-    public AppointmentOutcomeRecord(String appointmentId, String doctorId, String patientId, String date) {
+    public AppointmentOutcomeRecord(String appointmentId, String doctorId, String patientId, String date, String consultationNotes) {
         this.appointmentId = appointmentId;
         this.doctorId = doctorId;
         this.patientId = patientId;
         this.date = date;
-        this.servicesProvided = "";
-        this.prescriptions = "";
+        this.servicesProvided = ""; //Type of Service provided (e.g. consultation, X-Ray, blood Test, etc)
+        this.prescriptions = "";//Any prescribed medications: medication name, status (default is pending)
+        this.consultationNotes = consultationNotes;
     }
 
     public void recordService(String service) {

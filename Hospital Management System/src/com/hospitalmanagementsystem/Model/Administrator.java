@@ -19,6 +19,9 @@ public class Administrator extends Staff{
         this.logger = new Logger();
     }
 
+    // Getters and setters
+    public String getId() { return id; }
+    public String getName() { return name; }
     public String getPassword() { return password; }
 
     public List<User> getStaffList() {
