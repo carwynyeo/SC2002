@@ -4,7 +4,6 @@ import com.hospitalmanagementsystem.Controller.PatientController;
 import com.hospitalmanagementsystem.Model.Doctor;
 import com.hospitalmanagementsystem.Model.Patient;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,10 +16,9 @@ public class PatientBoundary extends UserBoundary {
         this.patientController = patientController;
         this.currentPatient = currentPatient;
     }
+
     @Override
     public void showMenu(Scanner scanner) {
-        List<Doctor> doctors = new ArrayList<>(); // Placeholder for actual doctor list (can be passed in)
-
         while (true) {
             System.out.println("Patient Menu:");
             System.out.println("1. View Medical Record");
@@ -37,28 +35,28 @@ public class PatientBoundary extends UserBoundary {
             scanner.nextLine(); // consume newline
             switch (choice) {
                 case 1:
-                    patientController.viewMedicalRecord();
+                    patientController.viewMedicalRecord(currentPatient);
                     break;
                 case 2:
-                    patientController.updatePersonalInformation(scanner);
+                    patientController.updatePersonalInformation(scanner, currentPatient);
                     break;
                 case 3:
-                    patientController.viewAvailableAppointments(doctors);
+                    patientController.viewAvailableAppointments(scanner);
                     break;
                 case 4:
-                    patientController.scheduleAppointment(scanner, doctors);
+                    patientController.scheduleAppointment(scanner, currentPatient);
                     break;
                 case 5:
-                    patientController.rescheduleAppointment(scanner);
+                    patientController.rescheduleAppointment(scanner, currentPatient);
                     break;
                 case 6:
-                    patientController.cancelAppointment(scanner);
+                    patientController.cancelAppointment(scanner, currentPatient);
                     break;
                 case 7:
-                    patientController.viewScheduledAppointments();
+                    patientController.viewScheduledAppointments(currentPatient);
                     break;
                 case 8:
-                    patientController.viewPastAppointmentOutcomes();
+                    patientController.viewPastAppointmentOutcomes(currentPatient);
                     break;
                 case 9:
                     System.out.println("Logging out...");

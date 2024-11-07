@@ -48,8 +48,7 @@ public class UserService {
         String id = scanner.nextLine();
         System.out.print("Enter Name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter Password: ");
-        String password = scanner.nextLine();
+        String defaultPassword = "password"; // Default password for all users
 
         switch (roleChoice) {
             case 1 -> {
@@ -59,7 +58,7 @@ public class UserService {
                     return;
                 }
                 // Create new patient if ID is unique
-                Patient newPatient = new Patient(id, name, password, new MedicalRecord(id, name, "O+"));
+                Patient newPatient = new Patient(id, name, defaultPassword, new MedicalRecord(id, name, "O+"));
                 patients.add(newPatient);
                 patientRepository.addPatient(newPatient); // Add to repository
                 System.out.println("Patient account created successfully!");
@@ -71,7 +70,7 @@ public class UserService {
                     return;
                 }
                 // Create new doctor if ID is unique
-                Doctor newDoctor = new Doctor(id, name, password);
+                Doctor newDoctor = new Doctor(id, name, defaultPassword);
                 doctors.add(newDoctor);
                 doctorRepository.addDoctor(newDoctor); // Add to repository
                 System.out.println("Doctor account created successfully!");
@@ -83,7 +82,7 @@ public class UserService {
                     return;
                 }
                 // Create new pharmacist if ID is unique
-                Pharmacist newPharmacist = new Pharmacist(id, name, password, new InventoryManager());
+                Pharmacist newPharmacist = new Pharmacist(id, name, defaultPassword, new InventoryManager());
                 pharmacists.add(newPharmacist);
                 pharmacistRepository.addPharmacist(newPharmacist); // Add to repository
                 System.out.println("Pharmacist account created successfully!");
@@ -95,7 +94,7 @@ public class UserService {
                     return;
                 }
                 // Create new administrator if ID is unique
-                Administrator newAdmin = new Administrator(id, name, password);
+                Administrator newAdmin = new Administrator(id, name, defaultPassword);
                 admins.add(newAdmin);
                 adminRepository.addAdministrator(newAdmin); // Add to repository
                 System.out.println("Administrator account created successfully!");

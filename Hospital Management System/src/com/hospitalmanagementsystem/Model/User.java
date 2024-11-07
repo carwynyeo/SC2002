@@ -16,12 +16,18 @@ public abstract class User {
     public String getId() {
         return id;
     }
+    public void setId(String id) {}
 
     public String getName() {
         return name;
     }
+    public void setName(String name) {}
 
     public String getRole() {
         return role;
     }
+    public void setRole(String role) {}
+
+    public String getPassword() {return password;}
+    public void setPassword(String password) {this.password = password;}
 }

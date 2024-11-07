@@ -8,14 +8,6 @@ public abstract class Staff extends User {
         this.staffId = id;
     }
 
-    public void addStaff(User newStaff) {
-        System.out.println("Staff added: " + newStaff.name);
-    }
-
-    public void removeStaff(User staff) {
-        System.out.println("Staff removed: " + staff.name);
-    }
-
     public void viewStaffDetails() {
         System.out.println("Staff ID: " + staffId + ", Name: " + name + ", Role: " + role);
     }

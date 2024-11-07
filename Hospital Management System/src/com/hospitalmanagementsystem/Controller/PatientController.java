@@ -5,6 +5,7 @@ import com.hospitalmanagementsystem.MedicalRecord.MedicalRecord;
 import com.hospitalmanagementsystem.Model.Patient;
 import com.hospitalmanagementsystem.Model.Appointment;
 import com.hospitalmanagementsystem.Model.User;
+import com.hospitalmanagementsystem.Repository.DoctorRepository;
 import com.hospitalmanagementsystem.Repository.PatientRepository;
 
 import java.util.List;
@@ -13,8 +14,10 @@ import java.util.Scanner;
 
 public class PatientController {
     private PatientRepository patientRepository;
+    private DoctorRepository doctorRepository;
 
     public PatientController(PatientRepository patientRepository) {
+        this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
     }
 
@@ -31,20 +34,16 @@ public class PatientController {
         return Optional.empty();
     }
 
-    public void viewMedicalRecord() {
-        System.out.println(medicalRecord.getRecordDetails()); // Access via getter method
+    public void viewMedicalRecord(Patient patient) {
+        System.out.println(patient.getMedicalRecord().getRecordDetails());
     }
 
-    public MedicalRecord getMedicalRecord() {
-        return medicalRecord;
-    }
-
-    public void updatePersonalInformation(Scanner scanner) {
+    public void updatePersonalInformation(Scanner scanner, Patient patient) {
         System.out.print("Enter new email: ");
         String newEmail = scanner.nextLine();
         System.out.print("Enter new phone number: ");
         String newPhone = scanner.nextLine();
-        medicalRecord.setContactInfo(newEmail, newPhone);
+        patient.getMedicalRecord().setContactInfo(newEmail, newPhone);
         System.out.println("Personal information updated.");
     }
 
@@ -55,16 +54,17 @@ public class PatientController {
         }
     }
 
-    public void scheduleAppointment(Scanner scanner, List<Doctor> doctors) {
+    public void scheduleAppointment(Scanner scanner, Patient patient) {
+        List<Doctor> doctors = doctorRepository.getAllDoctors(); // Fetch the list of doctors
         System.out.println("Select Doctor by ID:");
         for (Doctor doctor : doctors) {
-            System.out.println("Doctor: " + doctor.name + ", ID: " + doctor.id);
+            System.out.println("Doctor: " + doctor.getName() + ", ID: " + doctor.getId());
         }
         String doctorId = scanner.nextLine();
         Doctor selectedDoctor = null;
 
         for (Doctor doctor : doctors) {
-            if (doctor.id.equals(doctorId)) {
+            if (doctor.getId().equals(doctorId)) {
                 selectedDoctor = doctor;
                 break;
             }
@@ -73,8 +73,8 @@ public class PatientController {
         if (selectedDoctor != null) {
             System.out.print("Enter preferred date and time: ");
             String date = scanner.nextLine();
-            Appointment appointment = new Appointment("A" + (appointments.size() + 1), selectedDoctor, this, date);
-            appointments.add(appointment);
+            Appointment appointment = new Appointment("A" + (patient.getAppointments().size() + 1), selectedDoctor, patient, date);
+            patient.addAppointment(appointment);
             selectedDoctor.addAppointment(appointment);
             System.out.println("Appointment scheduled: " + appointment);
         } else {
@@ -82,11 +82,11 @@ public class PatientController {
         }
     }
 
-    public void rescheduleAppointment(Scanner scanner) {
+    public void rescheduleAppointment(Scanner scanner, Patient patient) {
         System.out.print("Enter the appointment ID to reschedule: ");
         String appointmentID = scanner.nextLine();
         Appointment appointmentToReschedule = null;
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : patient.getAppointments()) {
             if (appointment.getAppointmentID().equals(appointmentID)) {
                 appointmentToReschedule = appointment;
                 break;
@@ -96,9 +96,9 @@ public class PatientController {
         if (appointmentToReschedule != null) {
             System.out.print("Enter new date and time: ");
             String newDate = scanner.nextLine();
-            Appointment newAppointment = new Appointment(appointmentToReschedule.getAppointmentID(), appointmentToReschedule.getDoctor(), this, newDate);
-            appointments.remove(appointmentToReschedule);
-            appointments.add(newAppointment);
+            Appointment newAppointment = new Appointment(appointmentToReschedule.getAppointmentID(), appointmentToReschedule.getDoctor(), patient, newDate);
+            patient.getAppointments().remove(appointmentToReschedule);
+            patient.getAppointments().add(newAppointment);
             appointmentToReschedule.getDoctor().updateAppointment(appointmentToReschedule, newAppointment);
             System.out.println("Appointment rescheduled.");
         } else {
@@ -106,11 +106,11 @@ public class PatientController {
         }
     }
 
-    public void cancelAppointment(Scanner scanner) {
+    public void cancelAppointment(Scanner scanner, Patient patient) {
         System.out.print("Enter the appointment ID to cancel: ");
         String appointmentID = scanner.nextLine();
         Appointment appointmentToCancel = null;
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : patient.getAppointments()) {
             if (appointment.getAppointmentID().equals(appointmentID)) {
                 appointmentToCancel = appointment;
                 break;
@@ -118,7 +118,7 @@ public class PatientController {
         }
 
         if (appointmentToCancel != null) {
-            appointments.remove(appointmentToCancel);
+            patient.getAppointments().remove(appointmentToCancel);
             appointmentToCancel.getDoctor().cancelAppointment(appointmentToCancel);
             System.out.println("Appointment canceled.");
         } else {
@@ -126,16 +126,16 @@ public class PatientController {
         }
     }
 
-    public void viewScheduledAppointments() {
+    public void viewScheduledAppointments(Patient patient) {
         System.out.println("Scheduled Appointments:");
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : patient.getAppointments()) {
             System.out.println(appointment);
         }
     }
 
-    public void viewPastAppointmentOutcomes() {
+    public void viewPastAppointmentOutcomes(Patient patient) {
         System.out.println("Past Appointment Outcomes:");
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : patient.getAppointments()) {
             if (appointment.isCompleted()) {
                 System.out.println(appointment.getOutcomeRecord().viewOutcome());
             }

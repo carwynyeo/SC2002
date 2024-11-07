@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalRecord {
-    private String patientID;
-    private String name;
-    private String bloodType;
-    private List<String> diagnoses;
-    private List<String> treatments;
-    private ContactInfo contactInfo;
+    private final String patientID;
+    private final String name;
+    private final String bloodType;
+    private final List<String> diagnoses;
+    private final List<String> treatments;
+    private final ContactInfo contactInfo;
 
     public MedicalRecord(String patientID, String name, String bloodType) {
         this.patientID = patientID;
@@ -19,7 +19,7 @@ public class MedicalRecord {
         this.bloodType = bloodType;
         this.diagnoses = new ArrayList<>();
         this.treatments = new ArrayList<>();
-        this.contactInfo = new ContactInfo();
+        this.contactInfo = new ContactInfo(getContactInfo().getEmail(),getContactInfo().getPhoneNumber());
     }
 
     // Getter for record details
