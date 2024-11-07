@@ -15,6 +15,9 @@ public class TimeSlot {
         this.isAvailable = true; // Default to available
     }
 
+    public String getDate() {
+        return date;
+    }
     public void markAsBooked() {
         isAvailable = false;
         System.out.println("Time slot " + slotId + " marked as booked.");

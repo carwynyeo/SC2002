@@ -2,18 +2,20 @@ package com.hospitalmanagementsystem.Boundary;
 
 import com.hospitalmanagementsystem.Controller.PatientController;
 import com.hospitalmanagementsystem.Model.Doctor;
+import com.hospitalmanagementsystem.Model.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class PatientBoundary extends UserBoundary{
-
+public class PatientBoundary extends UserBoundary {
     private final PatientController patientController;
+    private final Patient currentPatient;
 
-    public PatientBoundary(String id, String name, String password, String role, PatientController patientController) {
-        super(id, name, password, role);// Call to UserBoundary constructor
+    public PatientBoundary(PatientController patientController, Patient currentPatient) {
+        super(currentPatient.getId(), currentPatient.getName(), currentPatient.getPassword(), currentPatient.getRole());
         this.patientController = patientController;
+        this.currentPatient = currentPatient;
     }
     @Override
     public void showMenu(Scanner scanner) {
