@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//Appointment details should include
+//Patient Id, Doctor Id, Appointment status, Date and Time, Appointment Outcome Record.
+//Prescription will contain the AppointmentOutcomeRecord for the selected Appointment Id
 public class Appointment {
     private static List<Appointment> allAppointments = new ArrayList<>();
 
