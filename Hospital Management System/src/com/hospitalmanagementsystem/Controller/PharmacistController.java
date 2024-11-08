@@ -7,16 +7,25 @@ import com.hospitalmanagementsystem.MedicalRecord.Prescription;
 import com.hospitalmanagementsystem.Model.User;
 import com.hospitalmanagementsystem.Repository.PharmacistRepository;
 import com.hospitalmanagementsystem.Service.ChangePasswordService;
+import com.hospitalmanagementsystem.Inventory.InventoryManager;
+import com.hospitalmanagementsystem.Utility.Logger;
 
 import java.util.Optional;
 import java.util.Scanner;
 
 public class PharmacistController extends UserController {
     private PharmacistRepository pharmacistRepository;
+    private InventoryManager inventoryManager;
+    private ReplenishmentRequest replenishmentRequest;
+    private Logger logger;
 
-    public PharmacistController(ChangePasswordService changePasswordService, PharmacistRepository pharmacistRepository) {
+    public PharmacistController(ChangePasswordService changePasswordService, PharmacistRepository pharmacistRepository,
+                                InventoryManager inventoryManager,ReplenishmentRequest replenishmentrequest,Logger logger) {
         super(changePasswordService);
         this.pharmacistRepository = pharmacistRepository;
+        this.inventoryManager = inventoryManager;
+        this.replenishmentRequest = replenishmentrequest;
+        this.logger = logger;
     }
 
     public Optional<User> loginPharmacist(Scanner scanner) {
@@ -75,7 +84,7 @@ public class PharmacistController extends UserController {
     public void submitReplenishmentRequest(Scanner scanner) {
         System.out.print("Enter medication name for replenishment: ");
         String medication = scanner.nextLine();
-        inventoryManager.addReplenishmentRequest(new ReplenishmentRequest(medication, id));
+        replenishmentRequest.submitRequest(new ReplenishmentRequest());
         System.out.println("Replenishment request submitted for " + medication);
         logger.logInfo("Replenishment request submitted for " + medication);
     }
