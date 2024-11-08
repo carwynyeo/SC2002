@@ -3,6 +3,8 @@ package com.hospitalmanagementsystem.Scheduling;
 import java.util.List;
 import com.hospitalmanagementsystem.Model.Appointment;
 
+
+//To make sure that appointments set do not clash with an existing appointment
 public class AppointmentConflictChecker {
 
     // Check for conflicting appointments

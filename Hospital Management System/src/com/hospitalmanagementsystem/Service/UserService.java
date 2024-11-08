@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Optional;
 
+/*** Used for Account Creation and accessing each user's specific login function
+ *
+ */
 public class UserService {
     private final PatientController patientController;
     private final DoctorController doctorController;

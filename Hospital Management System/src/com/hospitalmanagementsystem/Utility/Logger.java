@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+//Used to record Timestamps and Histroy of User Actions
 public class Logger {
     private final List<String> logs = new ArrayList<>();
 
