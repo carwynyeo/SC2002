@@ -17,7 +17,7 @@ public class Appointment {
     private String date;
     private String status;
     private boolean isCompleted;
-    private final Prescription prescription;
+    private Prescription prescription;
     private AppointmentOutcomeRecord outcomeRecord;
 
     // appointment statuses
@@ -87,6 +87,10 @@ public class Appointment {
 
     public Prescription getPrescription() {
         return prescription;
+    }
+
+    public void setPrescription(Prescription prescription) {
+        this.prescription = prescription; // Set the prescription for this appointment
     }
 
     public boolean isCompleted() {

@@ -37,7 +37,6 @@ public class DoctorController extends UserController {
         return Optional.empty();
     }
 
-
     public void viewPatientMedicalRecord(List<Patient> patients, Scanner scanner) {
         System.out.print("Enter Patient ID to view medical records: ");
         String patientId = scanner.nextLine();
@@ -93,15 +92,16 @@ public class DoctorController extends UserController {
         logger.logInfo("Doctor " + doctor.getName() + " set availability for " + slot.getDate());
     }
 
-
     public void manageAppointmentRequest(Doctor doctor, Appointment appointment, boolean accept) {
         if (accept) {
             doctor.addAppointment(appointment);
             appointment.setStatus("Confirmed");
-            logger.logInfo("Doctor " + doctor.getName() + " accepted appointment for patient: " + appointment.getPatient().getName());
+            logger.logInfo("Doctor " + doctor.getName() + " accepted appointment for patient: "
+                    + appointment.getPatient().getName());
         } else {
             appointment.setStatus("Declined");
-            logger.logInfo("Doctor " + doctor.getName() + " declined appointment for patient: " + appointment.getPatient().getName());
+            logger.logInfo("Doctor " + doctor.getName() + " declined appointment for patient: "
+                    + appointment.getPatient().getName());
         }
     }
 
@@ -138,10 +138,10 @@ public class DoctorController extends UserController {
             if (!conflictChecker.checkForConflicts(appointment, Appointment.getAllAppointments())) {
                 doctor.getSchedule().addAvailableSlot(new TimeSlot(
                         appointment.getAppointmentID(),
-                        appointment.getAppointmentTime().toLocalDate(),  // Use toLocalDate() to get just the date
+                        appointment.getAppointmentTime().toLocalDate().toString(), // Use toLocalDate() to get just the
+                                                                                   // date
                         appointment.getAppointmentTime().toLocalTime().toString(),
-                        appointment.getAppointmentTime().plusHours(1).toLocalTime().toString()
-                ));
+                        appointment.getAppointmentTime().plusHours(1).toLocalTime().toString()));
                 System.out.println("Appointment scheduled: " + appointment);
             } else {
                 System.out.println("Appointment conflict detected. Please choose another time");
@@ -154,7 +154,8 @@ public class DoctorController extends UserController {
         if (doctor != null) {
             doctor.removeAppointment(oldAppointment); // Remove the old appointment
             doctor.addAppointment(newAppointment); // Add the new appointment
-            logger.logInfo("Doctor " + doctor.getName() + " updated appointment from " + oldAppointment + " to " + newAppointment);
+            logger.logInfo("Doctor " + doctor.getName() + " updated appointment from " + oldAppointment + " to "
+                    + newAppointment);
         } else {
             System.out.println("Doctor not found.");
         }
@@ -173,9 +174,11 @@ public class DoctorController extends UserController {
     public List<Doctor> getDoctors() {
         return doctorRepository.getAllDoctors();
     }
+
     public Appointment findAppointmentById(String appointmentId) {
         return doctorRepository.findAppointmentById(appointmentId);
     }
+
     public void viewAvailableSlots(String doctorId) {
         List<TimeSlot> availableSlots = doctorRepository.getAvailableSlots(doctorId);
         if (availableSlots.isEmpty()) {
@@ -186,6 +189,7 @@ public class DoctorController extends UserController {
             }
         }
     }
+
     public List<Patient> getPatients(String doctorId) {
         return doctorRepository.getPatientsByDoctorId(doctorId);
     }

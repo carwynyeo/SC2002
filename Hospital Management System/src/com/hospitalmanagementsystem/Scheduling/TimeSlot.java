@@ -1,6 +1,5 @@
 package com.hospitalmanagementsystem.Scheduling;
 
-
 //Meant for appointmnets/availabilities
 public class TimeSlot {
     private String slotId;
@@ -20,6 +19,7 @@ public class TimeSlot {
     public String getDate() {
         return date;
     }
+
     public void markAsBooked() {
         isAvailable = false;
         System.out.println("Time slot " + slotId + " marked as booked.");
@@ -30,4 +30,3 @@ public class TimeSlot {
         System.out.println("Time slot " + slotId + " marked as available.");
     }
 }
-
