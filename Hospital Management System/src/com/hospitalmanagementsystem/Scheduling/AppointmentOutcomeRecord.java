@@ -2,8 +2,7 @@ package com.hospitalmanagementsystem.Scheduling;
 
 
 
-//Need to make this able to show "completed", "pending", "confirmed"
-// Should we add one more "rejected"?, "postponed"? or smth
+//Need to make this able to show "completed", "pending", "confirmed".
 public class AppointmentOutcomeRecord {
     private String appointmentId;
     private String doctorId;
