@@ -29,7 +29,8 @@ public class PharmacistBoundary extends UserBoundary {
             System.out.println("2. Update Prescription Status");
             System.out.println("3. View Medication Inventory");
             System.out.println("4. Submit Replenishment Request");
-            System.out.println("5. Logout");
+            System.out.println("5. Settings"); //So far only has change password function
+            System.out.println("6. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -62,6 +63,9 @@ public class PharmacistBoundary extends UserBoundary {
                     pharmacistController.submitReplenishmentRequest(scanner);
                     break;
                 case 5:
+                    pharmacistController.changePassword(currentPharmacist,scanner);
+                    break;
+                case 6:
                     System.out.println("Logging out...");
                     pharmacistController.logout(currentPharmacist);
                     return;
