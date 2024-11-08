@@ -1,37 +1,32 @@
 package com.hospitalmanagementsystem.MedicalRecord;
 
 public class Prescription {
-    private String medicationName;
+    private final String medicationName; // final to prevent changes
     private String status;
 
-    public Prescription() {
-        this.medicationName = "N/A";
-        this.status = "Pending";
-    }
-
+    // added medicationName arg to constructor
     public Prescription(String medicationName) {
         this.medicationName = medicationName;
         this.status = "Pending"; // default status
     }
 
+    // Getter for medication name
     public String getMedicationName() {
         return medicationName;
     }
 
-    public void setMedicationName(String medicationName) {
-        this.medicationName = medicationName;
-    }
-
+    // Getter for status
     public String getStatus() {
         return status;
     }
 
+    // Setter for status
     public void setStatus(String status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        return "Prescription[Medication: " + medicationName + ", Status: " + status + "]";
+        return String.format("Prescription [Medication: %s, Status: %s]", medicationName, status);
     }
 }
