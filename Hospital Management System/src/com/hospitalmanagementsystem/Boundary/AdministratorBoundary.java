@@ -23,7 +23,8 @@ public class AdministratorBoundary extends UserBoundary {
             System.out.println("2. View Appointments details");
             System.out.println("3. View and Manage Medication Inventory");
             System.out.println("4. Approve Replenishment Requests");
-            System.out.println("5. Logout");
+            System.out.println("5. Settings"); //So far only has change Password function
+            System.out.println("6. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -32,7 +33,8 @@ public class AdministratorBoundary extends UserBoundary {
                 case 2 -> administratorController.viewAppointments();
                 case 3 -> administratorController.manageInventory(scanner);
                 case 4 -> administratorController.approveReplenishmentRequest(scanner);
-                case 5 -> {
+                case 5 -> administratorController.changePassword(currentAdministrator,scanner);
+                case 6 -> {
                     System.out.println("Logging out...");
                     administratorController.logout(currentAdministrator);
                     return;

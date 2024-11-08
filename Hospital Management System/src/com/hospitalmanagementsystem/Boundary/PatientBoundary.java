@@ -29,7 +29,8 @@ public class PatientBoundary extends UserBoundary {
             System.out.println("6. Cancel an Appointment");
             System.out.println("7. View Scheduled Appointments");
             System.out.println("8. View Past Appointment Outcomes");
-            System.out.println("9. Logout");
+            System.out.println("9. Settings"); //So far only has change password function
+            System.out.println("10. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -59,6 +60,9 @@ public class PatientBoundary extends UserBoundary {
                     patientController.viewPastAppointmentOutcomes(currentPatient);
                     break;
                 case 9:
+                    patientController.changePassword(currentPatient,scanner);
+                    break;
+                case 10:
                     System.out.println("Logging out...");
                     patientController.logout(currentPatient);
                     return;
