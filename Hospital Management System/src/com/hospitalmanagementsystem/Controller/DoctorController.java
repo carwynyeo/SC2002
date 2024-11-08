@@ -38,7 +38,8 @@ public class DoctorController extends UserController {
     }
 
 
-    public void viewPatientMedicalRecord(List<Patient> patients, Scanner scanner) {
+    public void viewPatientMedicalRecord(Doctor doctor, Scanner scanner) {
+        List<Patient> patients = doctorRepository.getPatientsByDoctorId(doctor.getId());
         System.out.print("Enter Patient ID to view medical records: ");
         String patientId = scanner.nextLine();
 
@@ -61,7 +62,8 @@ public class DoctorController extends UserController {
         }
     }
 
-    public void updatePatientMedicalRecord(List<Patient> patients, Scanner scanner) {
+    public void updatePatientMedicalRecord(Doctor doctor, Scanner scanner) {
+        List<Patient> patients = doctorRepository.getPatientsByDoctorId(doctor.getId());
         System.out.print("Enter Patient ID to update medical records: ");
         String patientId = scanner.nextLine();
 
@@ -88,29 +90,6 @@ public class DoctorController extends UserController {
         }
     }
 
-    public void setAvailability(Doctor doctor, TimeSlot slot) {
-        doctor.addAvailableSlot(slot);
-        logger.logInfo("Doctor " + doctor.getName() + " set availability for " + slot.getDate());
-    }
-
-
-    public void manageAppointmentRequest(Doctor doctor, Appointment appointment, boolean accept) {
-        if (accept) {
-            doctor.addAppointment(appointment);
-            appointment.setStatus("Confirmed");
-            logger.logInfo("Doctor " + doctor.getName() + " accepted appointment for patient: " + appointment.getPatient().getName());
-        } else {
-            appointment.setStatus("Declined");
-            logger.logInfo("Doctor " + doctor.getName() + " declined appointment for patient: " + appointment.getPatient().getName());
-        }
-    }
-
-    public void recordAppointmentOutcome(Doctor doctor, Appointment appointment, String outcome) {
-        doctor.recordOutcome(appointment, outcome);
-        appointment.setCompleted(true);
-        logger.logInfo("Recorded outcome for appointment: " + appointment.getAppointmentID());
-    }
-
     public void viewPersonalSchedule(Doctor doctor) {
         System.out.println("Personal Schedule for " + doctor.getName() + ":");
         if (doctor.getAppointments().isEmpty()) {
@@ -120,15 +99,68 @@ public class DoctorController extends UserController {
         }
     }
 
+    public void setAvailability(Doctor doctor, Scanner scanner) {
+        System.out.print("Enter date for availability: ");
+        String date = scanner.nextLine();
+        TimeSlot slot = new TimeSlot("slot-" + System.currentTimeMillis(), date, "09:00", "17:00");
+        doctor.addAvailableSlot(slot);
+        logger.logInfo("Doctor " + doctor.getName() + " set availability for " + slot.getDate());
+    }
+
+    public void manageAppointmentRequest(Doctor doctor, Scanner scanner) {
+        System.out.print("Enter Appointment ID to manage: ");
+        String appointmentId = scanner.nextLine();
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment != null) {
+            System.out.println("1. Accept Appointment\n2. Decline Appointment");
+            int decision = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+            if (decision == 1) {
+                appointment.setStatus("Confirmed");
+                doctor.addAppointment(appointment); //Doctor will create an appointment upon accepting
+                logger.logInfo("Doctor " + doctor.getName() + " accepted appointment for patient: " + appointment.getPatient().getName());
+            } else {
+                appointment.setStatus("Declined");
+                logger.logInfo("Doctor " + doctor.getName() + " declined appointment for patient: " + appointment.getPatient().getName());
+            }
+        } else {
+            System.out.println("Appointment not found.");
+        }
+    }
+
     // Method to view appointments for a specific doctor
-    public void viewUpcomingAppointments(String doctorId) {
-        List<Appointment> appointments = doctorRepository.getAppointments(doctorId);
-        if (appointments.isEmpty()) {
+    public void viewUpcomingAppointments(Doctor doctor) {
+        System.out.println("Upcoming appointments for " + doctor.getName() + ":");
+        if (doctor.getAppointments().isEmpty()) {
             System.out.println("No scheduled upcoming appointments.");
         } else {
-            for (Appointment appointment : appointments) {
-                System.out.println(appointment);
-            }
+            doctor.getAppointments().forEach(System.out::println);
+        }
+    }
+
+    //Need to fix such that the list of appointments doctors,pharmacists,patients access are all the same
+    public Appointment findAppointmentById(String appointmentId) {
+        return doctorRepository.findAppointmentById(appointmentId);
+    }
+
+    public void recordAppointmentOutcome(Doctor doctor, Appointment appointment, String outcome) {
+        doctor.recordOutcome(appointment, outcome);
+        appointment.setCompleted(true);
+        logger.logInfo("Recorded outcome for appointment: " + appointment.getAppointmentID());
+    }
+
+    public void handleAppointmentOutcome(Doctor doctor, Scanner scanner) {
+        System.out.print("Enter Appointment ID to record outcome: ");
+        String appointmentId = scanner.nextLine();
+        Appointment appointment = findAppointmentById(appointmentId); // Find the appointment by ID
+
+        if (appointment != null) {
+            System.out.print("Enter outcome: ");
+            String outcome = scanner.nextLine();
+            recordAppointmentOutcome(doctor, appointment, outcome);
+            System.out.println("Appointment outcome recorded.");
+        } else {
+            System.out.println("Appointment not found.");
         }
     }
 
@@ -173,9 +205,7 @@ public class DoctorController extends UserController {
     public List<Doctor> getDoctors() {
         return doctorRepository.getAllDoctors();
     }
-    public Appointment findAppointmentById(String appointmentId) {
-        return doctorRepository.findAppointmentById(appointmentId);
-    }
+
     public void viewAvailableSlots(String doctorId) {
         List<TimeSlot> availableSlots = doctorRepository.getAvailableSlots(doctorId);
         if (availableSlots.isEmpty()) {
