@@ -24,7 +24,8 @@ public class AuthenticationService {
         }
 
         if (!isValidPassword(newPassword)) {
-            System.out.println("Password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.");
+            System.out.println(
+                    "Password must be at least 8 characters long, contain an uppercase letter, a number, and a special character.");
             return false;
         }
 
@@ -35,21 +36,10 @@ public class AuthenticationService {
 
     // Validate password strength
     private boolean isValidPassword(String password) {
-        if (password.length() < 8) {
-            return false;
-        }
-        if (!Pattern.compile("[A-Z]").matcher(password).find()) {
-            return false;
-        }
-        if (!Pattern.compile("[a-z]").matcher(password).find()) {
-            return false;
-        }
-        if (!Pattern.compile("[0-9]").matcher(password).find()) {
-            return false;
-        }
-        if (!Pattern.compile("[!@#$%^&*(),.?\":{}|<>]").matcher(password).find()) {
-            return false;
-        }
-        return true;
+        return password.length() >= 8 &&
+                Pattern.compile("[A-Z]").matcher(password).find() &&
+                Pattern.compile("[a-z]").matcher(password).find() &&
+                Pattern.compile("[0-9]").matcher(password).find() &&
+                Pattern.compile("[!@#$%^&*(),.?\":{}|<>]").matcher(password).find();
     }
 }

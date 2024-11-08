@@ -10,6 +10,12 @@ public class AppointmentOutcomeRecord {
     private String consultationNotes;
     private String status;
 
+    // appointment statuses
+    public static final String STATUS_PENDING = "Pending";
+    public static final String STATUS_CONFIRMED = "Confirmed";
+    public static final String STATUS_COMPLETED = "Completed";
+    public static final String STATUS_CANCELED = "Canceled";
+
     public AppointmentOutcomeRecord(String appointmentId, String doctorId, String patientId, String date,
             String consultationNotes) {
         this.appointmentId = appointmentId;
@@ -19,7 +25,7 @@ public class AppointmentOutcomeRecord {
         this.servicesProvided = "";
         this.prescriptions = "";
         this.consultationNotes = consultationNotes;
-        this.status = "Pending"; // default status
+        this.status = STATUS_PENDING; // default status
     }
 
     public void recordService(String service) {
