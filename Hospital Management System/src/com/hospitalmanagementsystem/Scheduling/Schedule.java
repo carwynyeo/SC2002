@@ -3,6 +3,9 @@ package com.hospitalmanagementsystem.Scheduling;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//Meant to manage doctors personal schedule
+//Have yet to incorporate it
 public class Schedule {
     private String doctorId;
     private List<TimeSlot> availableSlots;

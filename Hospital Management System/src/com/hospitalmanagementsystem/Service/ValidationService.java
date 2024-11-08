@@ -1,5 +1,7 @@
 package com.hospitalmanagementsystem.Service;
 import com.hospitalmanagementsystem.Model.Appointment;
+
+//Used to check and ensure that user input is valid
 public class ValidationService {
 
     // Validate appointment details

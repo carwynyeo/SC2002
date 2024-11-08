@@ -1,5 +1,12 @@
 package com.hospitalmanagementsystem.Utility;
 
+
+//The core functionality for this is for the StaffList.
+
+//Meant to show demonstrate role specific permissions, probably want to add this at the start
+//When a User creates account, then we show this to tell them their role specific permissions?
+
+
 public class Role {
     private String roleId;
     private String roleName; // e.g., Patient, Doctor, Pharmacist, Administrator
