@@ -2,6 +2,8 @@ package com.hospitalmanagementsystem.Service;
 
 import java.util.regex.Pattern;
 
+
+//Used for changing password
 public class ChangePasswordService {
     private String password;
 

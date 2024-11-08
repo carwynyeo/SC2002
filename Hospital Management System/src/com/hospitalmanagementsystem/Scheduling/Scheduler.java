@@ -3,6 +3,9 @@ package com.hospitalmanagementsystem.Scheduling;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+// Will be a bonus feature, that sends doctors/patients reminders of their scheduled appointment coming up
+// Also schedules Random Inventory checks for Pharmacists
 public class Scheduler {
 
     public void scheduleAppointmentReminders(long delay) {

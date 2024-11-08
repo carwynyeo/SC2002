@@ -1,5 +1,7 @@
 package com.hospitalmanagementsystem.Scheduling;
 
+
+//Meant for appointmnets/availabilities
 public class TimeSlot {
     private String slotId;
     private String date;
