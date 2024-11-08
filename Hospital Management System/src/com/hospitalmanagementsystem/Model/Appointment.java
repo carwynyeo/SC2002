@@ -26,18 +26,17 @@ public class Appointment {
     public static final String STATUS_COMPLETED = "Completed";
     public static final String STATUS_CANCELED = "Canceled";
 
-    public Appointment(String appointmentID, Doctor doctor, Patient patient, String date, LocalDateTime appointmentTime,
-            String medicationName) {
+    public Appointment(String appointmentID, Doctor doctor, Patient patient, String date,
+            LocalDateTime appointmentTime) {
         this.appointmentID = appointmentID;
         this.appointmentTime = appointmentTime;
         this.doctor = doctor;
         this.patient = patient;
         this.date = date;
-        this.status = "Pending";
+        this.status = STATUS_PENDING; // Set initial status to pending
         this.isCompleted = false;
         this.outcomeRecord = new AppointmentOutcomeRecord(appointmentID, doctor.getId(), patient.getId(), date,
                 "Initial consultation notes"); // Pass initial consultation notes as needed
-        this.prescription = new Prescription(medicationName); // Update to use new constructor
         allAppointments.add(this);
     }
 
@@ -73,14 +72,11 @@ public class Appointment {
         this.isCompleted = isCompleted;
     }
 
-    public AppointmentOutcomeRecord getOutcomeRecord(String consultationNotes) {
+    public AppointmentOutcomeRecord getOutcomeRecord() {
         // Create a new outcome record if it doesn't exist
         if (outcomeRecord == null) {
             outcomeRecord = new AppointmentOutcomeRecord(appointmentID, doctor.getId(), patient.getId(), date,
-                    consultationNotes);
-        } else {
-            // Update the existing outcome record's consultation notes
-            outcomeRecord.setConsultationNotes(consultationNotes);
+                    ""); // Create without initial notes
         }
         return outcomeRecord;
     }
@@ -108,7 +104,6 @@ public class Appointment {
     @Override
     public String toString() {
         return "Appointment ID: " + appointmentID + ", Doctor: " + doctor.getName() + ", Patient: " + patient.getName()
-                +
-                ", Date: " + date + ", Status: " + status + ", Completed: " + isCompleted;
+                + ", Date: " + date + ", Status: " + status + ", Completed: " + isCompleted;
     }
 }

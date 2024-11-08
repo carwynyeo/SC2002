@@ -9,16 +9,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-//Methods here should be fixed to retrieve StaffList from a StaffRepository
-//Staff Repository will contain all the Doctors from Doctor Repository, Pharmacists from....
-public class AdministratorController extends UserController{
+public class AdministratorController extends UserController {
     private final AdministratorRepository adminRepository;
-    private final InventoryManager inventoryManager = new InventoryManager();
-    private final Logger logger = new Logger();
+    private final InventoryManager inventoryManager;
+    private final Logger logger;
 
-    public AdministratorController(ChangePasswordService changePasswordService, AdministratorRepository adminRepository) {
+    public AdministratorController(ChangePasswordService changePasswordService,
+            AdministratorRepository adminRepository) {
         super(changePasswordService);
         this.adminRepository = adminRepository;
+        this.inventoryManager = new InventoryManager();
+        this.logger = new Logger();
     }
 
     public Optional<User> loginAdministrator(Scanner scanner) {
@@ -69,6 +70,11 @@ public class AdministratorController extends UserController{
         System.out.print("Enter staff password: ");
         String password = scanner.nextLine();
 
+        if (name.isEmpty() || id.isEmpty() || password.isEmpty()) {
+            System.out.println("Name, ID, and password cannot be empty.");
+            return;
+        }
+
         User newStaff = switch (role.toLowerCase()) {
             case "doctor" -> new Doctor(id, name, password);
             case "pharmacist" -> new Pharmacist(id, name, password, inventoryManager);
@@ -84,6 +90,7 @@ public class AdministratorController extends UserController{
             logger.logInfo("New staff added: " + name);
         }
     }
+
     private void removeStaff(Scanner scanner) {
         System.out.print("Enter staff ID to remove: ");
         String staffId = scanner.nextLine();
@@ -96,7 +103,8 @@ public class AdministratorController extends UserController{
     }
 
     public void viewAppointments() {
-        List<Appointment> appointments = adminRepository.getAppointments(); // Ensure getAppointments() method exists in the repository.
+        List<Appointment> appointments = adminRepository.getAppointments(); // Ensure getAppointments() method exists in
+                                                                            // the repository.
         if (appointments.isEmpty()) {
             System.out.println("No appointments scheduled.");
         } else {
@@ -131,7 +139,7 @@ public class AdministratorController extends UserController{
     public void approveReplenishmentRequest(Scanner scanner) {
         System.out.print("Enter medication name for approval: ");
         String medication = scanner.nextLine();
-        inventoryManager.trackLowStock();  // Simulate tracking for replenishment
+        inventoryManager.trackLowStock(); // Simulate tracking for replenishment
         System.out.println("Replenishment approved for " + medication);
         logger.logInfo("Replenishment approved for " + medication);
     }

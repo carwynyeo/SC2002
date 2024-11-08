@@ -8,6 +8,7 @@ import com.hospitalmanagementsystem.Repository.DoctorRepository;
 import com.hospitalmanagementsystem.Repository.PatientRepository;
 import com.hospitalmanagementsystem.Service.ChangePasswordService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -16,10 +17,11 @@ public class PatientController extends UserController {
     private PatientRepository patientRepository;
     private DoctorRepository doctorRepository;
 
-    public PatientController(ChangePasswordService changePasswordService, PatientRepository patientRepository) {
+    public PatientController(ChangePasswordService changePasswordService, PatientRepository patientRepository,
+            DoctorRepository doctorRepository) {
         super(changePasswordService);
-        this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
     }
 
     public Optional<User> loginPatient(Scanner scanner) {
@@ -72,9 +74,14 @@ public class PatientController extends UserController {
         }
 
         if (selectedDoctor != null) {
-            System.out.print("Enter preferred date and time: ");
+            System.out.print("Enter preferred date (yyyy-mm-dd): ");
             String date = scanner.nextLine();
-            Appointment appointment = new Appointment("A" + (patient.getAppointments().size() + 1), selectedDoctor, patient, date);
+            System.out.print("Enter preferred time (HH:mm): ");
+            String time = scanner.nextLine();
+            // Combine date and time to create LocalDateTime
+            LocalDateTime appointmentTime = LocalDateTime.parse(date + "T" + time); // Ensure this format is valid
+            Appointment appointment = new Appointment("A" + (patient.getAppointments().size() + 1), selectedDoctor,
+                    patient, date, appointmentTime);
             patient.addAppointment(appointment);
             selectedDoctor.addAppointment(appointment);
             System.out.println("Appointment scheduled: " + appointment);
@@ -95,9 +102,15 @@ public class PatientController extends UserController {
         }
 
         if (appointmentToReschedule != null) {
-            System.out.print("Enter new date and time: ");
+            System.out.print("Enter new date (yyyy-mm-dd): ");
             String newDate = scanner.nextLine();
-            Appointment newAppointment = new Appointment(appointmentToReschedule.getAppointmentID(), appointmentToReschedule.getDoctor(), patient, newDate);
+            System.out.print("Enter new time (HH:mm): ");
+            String newTime = scanner.nextLine();
+            // Combine new date and time to create LocalDateTime
+            LocalDateTime newAppointmentTime = LocalDateTime.parse(newDate + "T" + newTime); // Ensure this format is
+                                                                                             // valid
+            Appointment newAppointment = new Appointment(appointmentToReschedule.getAppointmentID(),
+                    appointmentToReschedule.getDoctor(), patient, newDate, newAppointmentTime);
             patient.getAppointments().remove(appointmentToReschedule);
             patient.getAppointments().add(newAppointment);
             appointmentToReschedule.getDoctor().updateAppointment(appointmentToReschedule, newAppointment);
@@ -120,7 +133,7 @@ public class PatientController extends UserController {
 
         if (appointmentToCancel != null) {
             patient.getAppointments().remove(appointmentToCancel);
-            appointmentToCancel.getDoctor().cancelAppointment(appointmentToCancel);
+            appointmentToCancel.getDoctor().removeAppointment(appointmentToCancel);
             System.out.println("Appointment canceled.");
         } else {
             System.out.println("Appointment not found.");
@@ -138,7 +151,7 @@ public class PatientController extends UserController {
         System.out.println("Past Appointment Outcomes:");
         for (Appointment appointment : patient.getAppointments()) {
             if (appointment.isCompleted()) {
-                System.out.println(appointment.getOutcomeRecord().viewOutcome());
+                appointment.getOutcomeRecord().viewOutcome(); // This prints the outcome details
             }
         }
     }
@@ -146,6 +159,4 @@ public class PatientController extends UserController {
     public void viewBillingDetails() {
         billing.viewBill(); // Display billing details
     }
-
 }
-
