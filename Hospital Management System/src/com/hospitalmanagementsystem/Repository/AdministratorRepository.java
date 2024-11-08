@@ -37,6 +37,9 @@ public class AdministratorRepository {
         return staffList.removeIf(staff -> staff.getId().equals(id));
     }
 
+    //This show be able to collect all Doctors,Pharmacists and Administrators
+    //So this function will call getalladministrators, getalldoctors, get all Pharmacists
+    //Make a Staff Repository to access all this (add,get,delete update Staff)
     public List<User> getAllStaff() {
         return staffList;
     }
