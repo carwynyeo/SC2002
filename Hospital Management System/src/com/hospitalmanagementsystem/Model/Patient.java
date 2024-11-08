@@ -11,6 +11,7 @@ public class Patient extends User {
     private String gender;
     private String dob; // Date of Birth
     private String name;
+    private String bloodType;  // New field for blood type
     private List<Appointment> appointments;
     private List<MedicalRecord> pastMedicalRecords;
     private MedicalRecord medicalRecord;
@@ -18,8 +19,9 @@ public class Patient extends User {
     private String doctorId;
 
     // Constructor
-    public Patient(String id, String name, String password, MedicalRecord medicalRecord) {
+    public Patient(String id, String name, String password, String bloodType,MedicalRecord medicalRecord) {
         super(id, name, password, "Patient");
+        this.bloodType = bloodType;
         this.appointments = new ArrayList<>(); // Initialize the list
         this.pastMedicalRecords = new ArrayList<>(); // Initialize the past medical records
         this.billings = new ArrayList<>(); // Initialize the billing list
@@ -27,6 +29,14 @@ public class Patient extends User {
     }
 
     // Getters and setters
+    // Getter and setter for blood type
+    public String getBloodType() {
+        return bloodType;
+    }
+    public void setBloodType(String bloodType) {
+        this.bloodType = bloodType;
+    }
+
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 

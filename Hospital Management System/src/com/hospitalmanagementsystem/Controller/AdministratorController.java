@@ -135,4 +135,19 @@ public class AdministratorController extends UserController{
         System.out.println("Replenishment approved for " + medication);
         logger.logInfo("Replenishment approved for " + medication);
     }
+
+    @Override
+    public void createUserAccount(Scanner scanner) {
+
+        System.out.print("Enter ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+        String defaultPassword = "password";
+        // Create new administrator if ID is unique
+        Administrator newAdmin = new Administrator(id, name, defaultPassword,"administrator");
+        adminRepository.addAdministrator(newAdmin); // Add to repository
+        System.out.println("Administrator account created successfully!");
+
+    }
 }

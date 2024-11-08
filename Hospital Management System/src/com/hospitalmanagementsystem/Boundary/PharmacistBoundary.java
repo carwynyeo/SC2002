@@ -1,11 +1,8 @@
 package com.hospitalmanagementsystem.Boundary;
 
 import com.hospitalmanagementsystem.Controller.PharmacistController;
-import com.hospitalmanagementsystem.Model.Appointment;
 import com.hospitalmanagementsystem.Model.Pharmacist;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class PharmacistBoundary extends UserBoundary {
@@ -18,59 +15,31 @@ public class PharmacistBoundary extends UserBoundary {
         this.currentPharmacist = currentPharmacist;
     }
 
-
     @Override
     public void showMenu(Scanner scanner) {
-        List<Appointment> appointments = pharmacistController.getAppointments(); // Placeholder for actual appointments
-
         while (true) {
             System.out.println("Pharmacist Menu:");
             System.out.println("1. View Appointment Outcome Record");
             System.out.println("2. Update Prescription Status");
             System.out.println("3. View Medication Inventory");
             System.out.println("4. Submit Replenishment Request");
-            System.out.println("5. Settings"); //So far only has change password function
+            System.out.println("5. Settings"); // So far only has change password function
             System.out.println("6. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
             switch (choice) {
-                case 1:
-                    System.out.println("Enter Appointment ID to view prescription: ");
-                    String appointmentId = scanner.nextLine();
-                    Appointment selectedAppointment = pharmacistController.findAppointmentById(appointmentId);
-                    if (selectedAppointment != null) {
-                        pharmacistController.viewPrescription(selectedAppointment);
-                    } else {
-                        System.out.println("Appointment not found.");
-                    }
-                    break;
-                case 2:
-                    System.out.println("Enter Appointment ID to update prescription status: ");
-                    appointmentId = scanner.nextLine();
-                    selectedAppointment = pharmacistController.findAppointmentById(appointmentId);
-                    if (selectedAppointment != null) {
-                        pharmacistController.updatePrescriptionStatus(selectedAppointment, scanner);
-                    } else {
-                        System.out.println("Appointment not found.");
-                    }
-                    break;
-
-                case 3:
-                    pharmacistController.viewMedicationInventory();
-                    break;
-                case 4:
-                    pharmacistController.submitReplenishmentRequest(scanner);
-                    break;
-                case 5:
-                    pharmacistController.changePassword(currentPharmacist,scanner);
-                    break;
-                case 6:
+                case 1 -> pharmacistController.viewAppointmentOutcomeRecord(scanner);
+                case 2 -> pharmacistController.updatePrescriptionStatus(scanner);
+                case 3 -> pharmacistController.viewMedicationInventory();
+                case 4 -> pharmacistController.submitReplenishmentRequest(scanner);
+                case 5 -> pharmacistController.changePassword(currentPharmacist, scanner);
+                case 6 -> {
                     System.out.println("Logging out...");
                     pharmacistController.logout(currentPharmacist);
                     return;
-                default:
-                    System.out.println("Invalid option.");
+                }
+                default -> System.out.println("Invalid option.");
             }
         }
     }

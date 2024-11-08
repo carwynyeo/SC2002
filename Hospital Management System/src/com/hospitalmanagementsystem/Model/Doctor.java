@@ -29,22 +29,24 @@ public class Doctor extends Staff{
     public Schedule getSchedule() { return schedule; }
     public Logger getLogger() { return logger; }
 
-    // Appointment management methods
-    public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
-    }
-
-    public void addAvailableSlot(TimeSlot slot) {
-        availableSlots.add(slot);
-        schedule.addAvailableSlot(slot);
-    }
-
-    public void removeAppointment(Appointment appointment) {
-        appointments.remove(appointment);
-    }
-
-    public void recordOutcome(Appointment appointment, String outcome) {
-        appointment.getOutcomeRecord().recordService(outcome);
-    }
+//    // Appointment management methods
+//    public void addAppointment(Appointment appointment) {
+//        appointments.add(appointment);
+//    }
+//
+//    public void addAvailableSlot(TimeSlot slot) {
+//        availableSlots.add(slot);
+//        schedule.addAvailableSlot(slot);
+//    }
+//    public void accessMedicalHistory(Patient patient) {
+//        // Logic to access medical history
+//    }
+//    public void removeAppointment(Appointment appointment) {
+//        appointments.remove(appointment);
+//    }
+//
+//    public void recordOutcome(Appointment appointment, String outcome) {
+//        appointment.getOutcomeRecord().recordService(outcome);
+//    }
 }
 

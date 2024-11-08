@@ -20,7 +20,7 @@ public class PharmacistController extends UserController {
     private Logger logger;
 
     public PharmacistController(ChangePasswordService changePasswordService, PharmacistRepository pharmacistRepository,
-                                InventoryManager inventoryManager,ReplenishmentRequest replenishmentrequest,Logger logger) {
+                                InventoryManager inventoryManager, ReplenishmentRequest replenishmentrequest, Logger logger) {
         super(changePasswordService);
         this.pharmacistRepository = pharmacistRepository;
         this.inventoryManager = inventoryManager;
@@ -41,7 +41,16 @@ public class PharmacistController extends UserController {
         return Optional.empty();
     }
 
-
+    public void viewAppointmentOutcomeRecord(Scanner scanner) {
+        System.out.println("Enter Appointment ID to view outcome record:");
+        String appointmentId = scanner.nextLine();
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment != null) {
+            viewPrescription(appointment);
+        } else {
+            System.out.println("Appointment not found.");
+        }
+    }
 
     public void viewPrescription(Appointment appointment) {
         Prescription prescription = appointment.getPrescription();
@@ -52,17 +61,25 @@ public class PharmacistController extends UserController {
         }
     }
 
-    public void updatePrescriptionStatus(Appointment appointment, Scanner scanner) {
-        Prescription prescription = appointment.getPrescription();
-        if (prescription != null) {
-            System.out.print("Enter new prescription status (e.g., Prepared, Dispensed): ");
-            String newStatus = scanner.nextLine();
-            prescription.setStatus(newStatus);
-            System.out.println("Prescription status updated for appointment " + appointment.getAppointmentID() + ": " + newStatus);
+    public void updatePrescriptionStatus(Scanner scanner) {
+        System.out.println("Enter Appointment ID to update prescription status:");
+        String appointmentId = scanner.nextLine();
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment != null) {
+            Prescription prescription = appointment.getPrescription();
+            if (prescription != null) {
+                System.out.print("Enter new prescription status (e.g., Prepared, Dispensed): ");
+                String newStatus = scanner.nextLine();
+                prescription.setStatus(newStatus);
+                System.out.println("Prescription status updated for appointment " + appointment.getAppointmentID() + ": " + newStatus);
+            } else {
+                System.out.println("No prescription found for this appointment.");
+            }
         } else {
-            System.out.println("No prescription found for this appointment.");
+            System.out.println("Appointment not found.");
         }
     }
+
 
     public void prepareMedication(Appointment appointment) {
         Prescription prescription = appointment.getPrescription();
@@ -87,6 +104,24 @@ public class PharmacistController extends UserController {
         replenishmentRequest.submitRequest(new ReplenishmentRequest());
         System.out.println("Replenishment request submitted for " + medication);
         logger.logInfo("Replenishment request submitted for " + medication);
+    }
+
+    private Appointment findAppointmentById(String appointmentId) {
+        // Assume this method interacts with the repository to retrieve an appointment by ID
+        return pharmacistRepository.findAppointmentById(appointmentId);
+    }
+
+    @Override
+    public void createUserAccount(Scanner scanner) {
+        System.out.print("Enter ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+        String defaultPassword = "password";
+        // Create new pharmacist if ID is unique
+        Pharmacist newPharmacist = new Pharmacist(id, name, defaultPassword, new InventoryManager());
+        pharmacistRepository.addPharmacist(newPharmacist); // Add to repository
+        System.out.println("Pharmacist account created successfully!");
     }
 }
 

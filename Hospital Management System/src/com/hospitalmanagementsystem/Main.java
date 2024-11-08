@@ -2,14 +2,11 @@ package com.hospitalmanagementsystem;
 
 import com.hospitalmanagementsystem.Boundary.*;
 import com.hospitalmanagementsystem.Service.ChangePasswordService;
-import com.hospitalmanagementsystem.Service.UserService;
 import com.hospitalmanagementsystem.Controller.*;
 import com.hospitalmanagementsystem.Model.*;
 import com.hospitalmanagementsystem.Repository.*;
 
 import java.util.Optional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -29,15 +26,6 @@ public class Main {
     private final AdministratorController adminController = new AdministratorController(adminAuthService, adminRepository);
     private final PharmacistController pharmacistController = new PharmacistController(pharmacistAuthService, pharmacistRepository);
 
-    private final List<Patient> patients = new ArrayList<>();
-    private final List<Doctor> doctors = new ArrayList<>();
-    private final List<Pharmacist> pharmacists = new ArrayList<>();
-    private final List<Administrator> admins = new ArrayList<>();
-
-    UserService userService = new UserService(patientController, doctorController, adminController,
-            pharmacistController, patientRepository, doctorRepository, pharmacistRepository, adminRepository
-    );
-
     public static void main(String[] args) {
         new Main().start(); // Create an instance of Main and call the instance method start
     }
@@ -52,7 +40,7 @@ public class Main {
             scanner.nextLine(); // consume newline
 
             switch (choice) {
-                case 1 -> userService.createUserAccount(scanner, patients, doctors, pharmacists, admins);
+                case 1 -> createUserAccount(scanner);
                 case 2 -> loginAsPatient(scanner);
                 case 3 -> loginAsDoctor(scanner);
                 case 4 -> loginAsPharmacist(scanner);
@@ -78,7 +66,7 @@ public class Main {
     }
 
     private void loginAsPatient(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(2, scanner);
+        Optional<User> loggedInUser = patientController.loginPatient(scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Patient patient) {
             PatientBoundary patientBoundary = new PatientBoundary(patientController, patient); // Pass entire Patient object and controller
             patientBoundary.showMenu(scanner);
@@ -88,7 +76,7 @@ public class Main {
     }
 
     private void loginAsDoctor(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(3, scanner);
+        Optional<User> loggedInUser = doctorController.loginDoctor(scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Doctor doctor) {
             DoctorBoundary doctorBoundary = new DoctorBoundary(doctorController, doctor);
             doctorBoundary.showMenu(scanner);
@@ -99,7 +87,7 @@ public class Main {
 
 
     private void loginAsPharmacist(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(4, scanner);
+        Optional<User> loggedInUser = pharmacistController.loginPharmacist(scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Pharmacist pharmacist) {
             PharmacistBoundary pharmacistBoundary = new PharmacistBoundary(pharmacistController, pharmacist); // Pass entire Pharmacist object and controller
             pharmacistBoundary.showMenu(scanner);
@@ -109,12 +97,37 @@ public class Main {
     }
 
     private void loginAsAdministrator(Scanner scanner) {
-        Optional<User> loggedInUser = userService.loginUser(5, scanner);
+        Optional<User> loggedInUser = adminController.loginAdministrator(scanner);
         if (loggedInUser.isPresent() && loggedInUser.get() instanceof Administrator admin) {
             AdministratorBoundary adminBoundary = new AdministratorBoundary(adminController, admin); // Pass entire Administrator object and controller
             adminBoundary.showMenu(scanner);
         } else {
             System.out.println("Invalid Administrator credentials.");
         }
+    }
+    private void createUserAccount(Scanner scanner) {
+        System.out.println("Choose a user role to create:");
+        System.out.println("1. Patient\n2. Doctor\n3. Pharmacist\n4. Administrator");
+        int roleChoice = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        switch (roleChoice) {
+            case 1 ->
+                patientController.createUserAccount(scanner);
+
+            case 2 ->
+                 doctorController.createUserAccount(scanner);
+
+            case 3 ->
+                 pharmacistController.createUserAccount(scanner);
+
+            case 4 ->
+                 adminController.createUserAccount(scanner);
+
+            default ->
+                System.out.println("Invalid login choice.");
+
+
+    }
+
     }
 }

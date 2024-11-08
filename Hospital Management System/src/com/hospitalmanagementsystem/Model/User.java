@@ -6,11 +6,11 @@ public abstract class User {
     protected String password;
     protected String role;
 
-    public User(String id, String name, String password, String role) {
+    public User(String id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
-        this.role = role;
+
     }
 
     public String getId() {
@@ -30,4 +30,9 @@ public abstract class User {
 
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
+
+    @Override
+    public String toString() {
+        return id + "," + name + "," + password + "," + role;
+    }
 }

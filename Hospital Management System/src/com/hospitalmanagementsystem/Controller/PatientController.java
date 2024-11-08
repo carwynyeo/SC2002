@@ -1,5 +1,6 @@
 package com.hospitalmanagementsystem.Controller;
 
+import com.hospitalmanagementsystem.MedicalRecord.MedicalRecord;
 import com.hospitalmanagementsystem.Model.Doctor;
 import com.hospitalmanagementsystem.Model.Patient;
 import com.hospitalmanagementsystem.Model.Appointment;
@@ -39,7 +40,7 @@ public class PatientController extends UserController {
         System.out.println(patient.getMedicalRecord().getRecordDetails());
     }
 
-    public void updatePersonalInformation(Scanner scanner, Patient patient) {
+    public void updatePersonalInformation(Patient patient,Scanner scanner) {
         System.out.print("Enter new email: ");
         String newEmail = scanner.nextLine();
         System.out.print("Enter new phone number: ");
@@ -48,14 +49,16 @@ public class PatientController extends UserController {
         System.out.println("Personal information updated.");
     }
 
-    public void viewAvailableAppointments(List<Doctor> doctors) {
+    //Fix function
+    public void viewAvailableAppointments(Patient patient,Scanner scanner) {
+        List<Doctor> doctors = doctorRepository.getAllDoctors();
         System.out.println("Available appointment slots:");
         for (Doctor doctor : doctors) {
             System.out.println("Doctor " + doctor.getName() + " availability: " + doctor.getAvailableSlots());
         }
     }
 
-    public void scheduleAppointment(Scanner scanner, Patient patient) {
+    public void scheduleAppointment(Patient patient,Scanner scanner) {
         List<Doctor> doctors = doctorRepository.getAllDoctors(); // Fetch the list of doctors
         System.out.println("Select Doctor by ID:");
         for (Doctor doctor : doctors) {
@@ -83,7 +86,7 @@ public class PatientController extends UserController {
         }
     }
 
-    public void rescheduleAppointment(Scanner scanner, Patient patient) {
+    public void rescheduleAppointment( Patient patient,Scanner scanner) {
         System.out.print("Enter the appointment ID to reschedule: ");
         String appointmentID = scanner.nextLine();
         Appointment appointmentToReschedule = null;
@@ -107,7 +110,7 @@ public class PatientController extends UserController {
         }
     }
 
-    public void cancelAppointment(Scanner scanner, Patient patient) {
+    public void cancelAppointment( Patient patient,Scanner scanner) {
         System.out.print("Enter the appointment ID to cancel: ");
         String appointmentID = scanner.nextLine();
         Appointment appointmentToCancel = null;
@@ -143,9 +146,21 @@ public class PatientController extends UserController {
         }
     }
 
-    public void viewBillingDetails() {
-        billing.viewBill(); // Display billing details
+    public void viewBillingDetails(Patient patient) {
+        System.out.println(patient.getBillings());; // Display billing details
     }
 
+    @Override
+    public void createUserAccount(Scanner scanner) {
+        System.out.print("Enter ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+        String defaultPassword = "password";
+        // Create new patient if ID is unique
+        Patient newPatient = new Patient(id, name, defaultPassword, new MedicalRecord(id, name, "O+"));
+        patientRepository.addPatient(newPatient); // Add to repository
+        System.out.println("Patient account created successfully!");
+    }
 }
 

@@ -12,7 +12,7 @@ public class Administrator extends Staff{
     private final Logger logger;
 
     //Administrator constructor
-    public Administrator(String id, String name, String password) {
+    public Administrator(String id, String name, String password, String role) {
         super(id, name, password, "Administrator");
         this.staffList = new ArrayList<>();
         this.inventoryManager = new InventoryManager();

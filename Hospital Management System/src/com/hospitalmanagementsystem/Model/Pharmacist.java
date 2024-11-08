@@ -19,11 +19,6 @@ public class Pharmacist extends Staff{
         this.logger = new Logger();
         this.prescriptions = new ArrayList<>(); // Initialize prescriptions list
     }
-
-    // Getters and setters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getPassword() { return password; }
     // Getters and setters
     public InventoryManager getInventoryManager() { return inventoryManager; }
     public void setInventoryManager(InventoryManager inventoryManager) { this.inventoryManager = inventoryManager; }

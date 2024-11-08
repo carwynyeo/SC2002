@@ -1,15 +1,13 @@
 package com.hospitalmanagementsystem.Model;
 
 public abstract class Staff extends User {
-    private String staffId;
+    private String role;
 
     public Staff(String id, String name, String password, String role) {
-        super(id, name, password, role);
-        this.staffId = id;
+        super(id, name, password);
+        this.role = role;
     }
 
-    public void viewStaffDetails() {
-        System.out.println("Staff ID: " + staffId + ", Name: " + name + ", Role: " + role);
-    }
+    public String getRole() { return role; }
 }
 

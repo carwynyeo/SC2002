@@ -5,12 +5,13 @@ import com.hospitalmanagementsystem.Service.ChangePasswordService;
 
 import java.util.Scanner;
 
-public class UserController {
+public abstract class UserController {
     protected ChangePasswordService changePasswordService;
 
     public UserController(ChangePasswordService changePasswordService) {
         this.changePasswordService = changePasswordService;
     }
+ public abstract void createUserAccount(Scanner scanner);
 
     public void logout(User currentUser) {
         // Clear the current User's session, if applicable
