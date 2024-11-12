@@ -13,13 +13,30 @@ public class MedicalRecord {
     private final List<String> treatments;
     private final ContactInfo contactInfo;
 
-    public MedicalRecord(String patientID, String name, String bloodType) {
+    public MedicalRecord(String patientID, String name, String bloodType, String email, String phone) {
         this.patientID = patientID;
         this.name = name;
         this.bloodType = bloodType;
         this.diagnoses = new ArrayList<>();
         this.treatments = new ArrayList<>();
-        this.contactInfo = new ContactInfo(getContactInfo().getEmail(),getContactInfo().getPhoneNumber());
+        this.contactInfo = new ContactInfo(email, phone);
+        // this.contactInfo = new ContactInfo(getContactInfo().getEmail(),
+        // getContactInfo().getPhoneNumber());
+    }
+
+    // Getter for patient ID
+    public String getPatientID() {
+        return patientID;
+    }
+
+    // Getter for name
+    public String getName() {
+        return name;
+    }
+
+    // Getter for blood type
+    public String getBloodType() {
+        return bloodType;
     }
 
     // Getter for record details
@@ -28,6 +45,7 @@ public class MedicalRecord {
                 ", Diagnoses: " + diagnoses + ", Treatments: " + treatments +
                 ", Contact Info: " + contactInfo.getDetails() + "]";
     }
+
     public void setContactInfo(String email, String phone) {
         contactInfo.updateContactInfo(email, phone);
     }
